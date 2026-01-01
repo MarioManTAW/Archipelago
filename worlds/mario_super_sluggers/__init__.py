@@ -30,8 +30,8 @@ class MarioSuperSluggersWebWorld(WebWorld):
         tutorial_name="Start Guide",
         description="A guide to playing Mario Super Sluggers in Archipelago.",
         language="English",
-        file_name="guide_en.md",
-        link="guide/en",
+        file_name="setup_en.md",
+        link="setup/en",
         authors=["MarioManTAW"]
     )
 
