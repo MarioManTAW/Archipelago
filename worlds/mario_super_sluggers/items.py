@@ -187,7 +187,7 @@ def create_items(world: MarioSuperSluggersWorld) -> None:
     items_to_create.remove(starting_captain)
     world.push_precollected(create_item(world, starting_captain))
     items_to_create += ["5 coins"] * 5
-    items_to_create += ["10 coins"] * 7
+    items_to_create += ["10 coins"] * 8
     items_to_create += ["20 coins"] * 5
     items_to_create += ["30 coins"] * 5
     items_to_create += ["40 coins"]
