@@ -90,6 +90,11 @@ NOPS = [0x801E0270, 0x801E3114, 0x801E4AF8, 0x801E4B74, 0x801E6684, 0x802390F8]
 
 BRANCH = [0x801E8E18]
 
+CUSTOM_BYTES = {
+    0x8020F99E: 0x02,
+    0x8020F99F: 0x4C
+}
+
 CUTSCENES = [
     0x80E55C0901, 0x80E55C9201, 0x80E55C9701, 0x80E55C9D01, 0x80E55C9E01, 0x80E55CA001, 0x80E55CA101, 0x80E55CA301,
     0x80E55CA401, 0x80E55CAB01, 0x80E55CAC01, 0x80E55CAD01, 0x80E55CAE01, 0x80E55CB201, 0x80E55CB501, 0x80E55CBB01,
@@ -408,6 +413,8 @@ def init_game(ctx):
         dolphin_memory_engine.write_word(addr, 0x60000000)
     for addr in BRANCH:
         write_short(addr, 0x4800)
+    for addr in CUSTOM_BYTES:
+        dolphin_memory_engine.write_byte(addr, CUSTOM_BYTES[addr])
     if ctx.reduced_cutscenes:
         for i in CUTSCENES:
             addr = i >> 8
