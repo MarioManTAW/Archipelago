@@ -90,9 +90,30 @@ NOPS = [0x801E0270, 0x801E3114, 0x801E4AF8, 0x801E4B74, 0x801E6684, 0x802390F8]
 
 BRANCH = [0x801E8E18]
 
-CUSTOM_BYTES = {
-    0x8020F99E: 0x02,
-    0x8020F99F: 0x4C
+CUSTOM_BYTES = {}
+
+CUSTOM_WORDS = {
+    0x8020F99C: 0x8803024C,
+    0x8020EDC0: 0x388000AD,
+    0x8020EDC4: 0x8803014F,
+    0x8020EDC8: 0x2C000004,
+    0x8020EDCC: 0x40820034,
+    0x8020EDD0: 0x88030011,
+    0x8020EDD4: 0x2C000002,
+    0x8020EDD8: 0x40820028,
+    0x8020EDDC: 0x38600001,
+    0x8020EDE0: 0x987C01B5,
+    0x8020EDE4: 0x881C01EF,
+    0x8020EDE8: 0x2C000000,
+    0x8020EDEC: 0x40820008,
+    0x8020EDF0: 0x987C01EF,
+    0x8020EDF4: 0x38000001,
+    0x8020EDF8: 0x981503A0,
+    0x8020EDFC: 0x38840001,
+    0x8020EE00: 0x7F63DB78,
+    0x8020EE04: 0x38A00001,
+    0x8020EE08: 0x4BFB0489,
+    0x8020EE0C: 0x60000000
 }
 
 CUTSCENES = [
@@ -415,6 +436,8 @@ def init_game(ctx):
         write_short(addr, 0x4800)
     for addr in CUSTOM_BYTES:
         dolphin_memory_engine.write_byte(addr, CUSTOM_BYTES[addr])
+    for addr in CUSTOM_WORDS:
+        dolphin_memory_engine.write_word(addr, CUSTOM_WORDS[addr])
     if ctx.reduced_cutscenes:
         for i in CUTSCENES:
             addr = i >> 8
