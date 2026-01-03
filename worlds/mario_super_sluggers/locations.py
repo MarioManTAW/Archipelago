@@ -72,7 +72,7 @@ LOCATION_NAME_TO_ID = {
     "Yoshi Park: Chest": 0x80E55BBC01,
     "Wario City: Chest": 0x80E55BC701,
     "Mario Stadium: Red Noki's gift": 0x80E55C9501,
-    "Mario Stadium: Bottom barrel": 0x80E55D5904,
+    "Mario Stadium: Bottom barrel": 0x80E55D5901,
     "Mario Stadium: Middle barrel after Yellow Pianta": 0x80E55D5902,
     "Mario Stadium: Top barrel": 0x80E55D5904,
     "Mario Stadium: Bottom bush": 0x80E55D5908,
