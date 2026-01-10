@@ -44,6 +44,8 @@ DAY_NIGHT = 0x80E55AE0
 IS_NIGHT = 0x80E55DC1
 AUTO_NIGHT = 0x802076CB
 BOWSER_ACTIVE = 0x80E55D3A
+BABY_DAISY_CHECK = 0x80E55B29
+RATTLE_ACTIVE = 0x80E55D4C
 
 FLAG_BYTE_MIN = 0x80E55D59
 FLAG_BYTE_MAX = 0x80E55D61
@@ -602,6 +604,8 @@ async def check_locations(ctx: MarioSuperSluggersContext) -> None:
             checked = dolphin_memory_engine.read_byte(addr) & value == 0
         else:
             checked = dolphin_memory_engine.read_byte(addr) == value
+            if addr == BABY_DAISY_CHECK and checked:
+                dolphin_memory_engine.write_byte(RATTLE_ACTIVE, dolphin_memory_engine.read_byte(RATTLE_ACTIVE) | 0x20)
 
         if checked:
             ctx.locations_checked.add(id)
