@@ -318,11 +318,6 @@ def _give_item(item_id: int) -> bool:
         write_short(addr, min(read_short(addr) + value, 999))
     else:
         dolphin_memory_engine.write_byte(addr, value)
-        if value == 0x02 and read_short(TEAM_BASE + 0x10) == 0xFFFF:
-            team_slot = TEAM_BASE
-            while read_short(team_slot) != 0xFFFF:
-                team_slot += 2
-            write_short(team_slot, addr - CHAR_BASE)
 
     if addr == DAY_NIGHT:
         dolphin_memory_engine.write_byte(AUTO_NIGHT, value)
