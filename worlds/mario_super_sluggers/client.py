@@ -173,8 +173,8 @@ class MarioSuperSluggersCommandProcessor(ClientCommandProcessor):
         """
         Reset the current mission to an alternative if no unlocked character can complete the mission.
         """
-        if dolphin_memory_engine.is_hooked() and self.ctx.dolphin_status == CONNECTION_CONNECTED_STATUS:
-            dolphin_memory_engine.write_byte(CURR_MISSION, 0)
+        if isinstance(self.ctx, MarioSuperSluggersContext) and \
+            dolphin_memory_engine.is_hooked() and self.ctx.dolphin_status == CONNECTION_CONNECTED_STATUS:
             logger.info("Changed mission.")
         else:
             logger.info("Dolphin not connected.")
@@ -187,8 +187,8 @@ class MarioSuperSluggersContext(CommonContext):
     """
 
     command_processor = MarioSuperSluggersCommandProcessor
-    game: str = "Mario Super Sluggers"
-    items_handling: int = 0b111
+    game = "Mario Super Sluggers"
+    items_handling = 0b111
 
     def __init__(self, server_address: Optional[str], password: Optional[str]) -> None:
         """
