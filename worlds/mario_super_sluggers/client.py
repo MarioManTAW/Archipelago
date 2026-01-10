@@ -1,5 +1,6 @@
 import asyncio
 import traceback
+import random
 from typing import TYPE_CHECKING, Any, Optional
 
 import dolphin_memory_engine
@@ -55,6 +56,8 @@ STAGE_NAMES = {
     9: "Wario City",
     10: "Yoshi Park"
 }
+
+SAFE_MISSIONS = [0x00, 0x01, 0x02, 0x0F, 0x12, 0x13, 0x14, 0x15]
 
 MISSION_COUNTS = {
     0x07: 7,
@@ -175,6 +178,7 @@ class MarioSuperSluggersCommandProcessor(ClientCommandProcessor):
         """
         if isinstance(self.ctx, MarioSuperSluggersContext) and \
             dolphin_memory_engine.is_hooked() and self.ctx.dolphin_status == CONNECTION_CONNECTED_STATUS:
+            dolphin_memory_engine.write_byte(CURR_MISSION, random.choice(SAFE_MISSIONS))
             logger.info("Changed mission.")
         else:
             logger.info("Dolphin not connected.")
@@ -428,11 +432,11 @@ async def check_mission_condition() -> None:
             valid = dolphin_memory_engine.read_byte(char) == 2
             if valid: break
         if not valid:
-            dolphin_memory_engine.write_byte(CURR_MISSION, 0)
+            dolphin_memory_engine.write_byte(CURR_MISSION, random.choice(SAFE_MISSIONS))
     elif mission in MISSION_COUNTS:
         valid = dolphin_memory_engine.read_bytes(CHAR_BASE, 71).count(0x02) >= MISSION_COUNTS[mission]
         if not valid:
-            dolphin_memory_engine.write_byte(CURR_MISSION, 0)
+            dolphin_memory_engine.write_byte(CURR_MISSION, random.choice(SAFE_MISSIONS))
 
 
 def check_ingame() -> bool:
