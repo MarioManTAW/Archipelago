@@ -26,7 +26,7 @@ CONNECTION_LOST_STATUS = (
 CONNECTION_CONNECTED_STATUS = "Dolphin connected successfully."
 CONNECTION_INITIAL_STATUS = "Dolphin connection has not been initiated."
 
-WORLD_VERSION = Utils.tuplize_version("0.0.3")
+WORLD_VERSION = Utils.tuplize_version("0.0.4")
 
 # The expected index for the following item that should be received.
 EXPECTED_INDEX_ADDR = 0x80E55000
@@ -667,7 +667,7 @@ async def check_mission_condition() -> None:
             dolphin_memory_engine.write_byte(CURR_MISSION, random.choice(SAFE_MISSIONS))
     elif mission in CHEMISTRY_MISSIONS:
         valid = False
-        for pair in CHEMISTRY_PAIRS[mission]:
+        for pair in CHEMISTRY_PAIRS:
             valid = dolphin_memory_engine.read_byte(pair[0]) == 2 and dolphin_memory_engine.read_byte(pair[1]) == 2
             if valid: break
         if not valid:
