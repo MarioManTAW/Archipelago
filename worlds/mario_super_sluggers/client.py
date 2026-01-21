@@ -26,14 +26,15 @@ CONNECTION_LOST_STATUS = (
 CONNECTION_CONNECTED_STATUS = "Dolphin connected successfully."
 CONNECTION_INITIAL_STATUS = "Dolphin connection has not been initiated."
 
-WORLD_VERSION = Utils.tuplize_version("0.0.4")
+WORLD_VERSION = Utils.tuplize_version("0.1.0")
 
 # The expected index for the following item that should be received.
 EXPECTED_INDEX_ADDR = 0x80E55000
 
 IN_GAME_FLAG = 0x80E55D59
-GOAL_FLAG = 0x80E55C04
+GOAL_FLAG = [0x80E55C04, 0x80E55B3B]
 COIN_COUNT = 0x80E55C0A
+ITEM_COUNTS = [0x80E55DAC, 0x80E55DAD, 0x80E55DAE, 0x80E55DAF, 0x80E55DB0, 0x80E55DB1, 0x80E55DB2]
 CURR_STAGE = 0x80E55D89
 CURR_MISSION = 0x80E55DBC
 REQ_CHARS = [0x80205F57, 0x801E8E2B, 0x801ABC2B, 0x801AB6E7]
@@ -310,12 +311,14 @@ MISSION_CHARS = {
 
 MOVED_FLAGS = [
     0x8006BABA, 0x801945B6, 0x80194626, 0x8019466A, 0x801946DA, 0x801960AA, 0x801962AA, 0x801964E2, 0x80196C62,
-    0x80196CAE, 0x801BE38E, 0x801C3F22, 0x801C4196, 0x801C41B6, 0x801C41D6, 0x801C41F6, 0x801C4216, 0x801C4236,
-    0x801C4256, 0x801D9526, 0x801D954A, 0x801D956E, 0x801D9592, 0x801D95B6, 0x801D95DA, 0x801D95FE, 0x801E304E,
-    0x801E34A2, 0x801E824E, 0x801E8272, 0x801E8DF6, 0x801EBCFE, 0x801EBD1A, 0x801EEBB6, 0x801EEBD6, 0x801EEBFA,
-    0x801EEC1E, 0x801EEC42, 0x801EEECA, 0x801F4BC6, 0x801F524E, 0x801F5A0A, 0x801F5C0E, 0x801F5D62, 0x801F69EE,
-    0x801F768E, 0x802024AA, 0x80202522, 0x8020253A, 0x802025B2, 0x802025BE, 0x80202636, 0x80203382, 0x8020BCBA,
-    0x8020BCC6, 0x8020BF36, 0x8020C43A, 0x8020EEAE
+    0x80196CAE, 0x801BE38E, 0x801C35D2, 0x801C360E, 0x801C367E, 0x801C3C9E, 0x801C3F22, 0x801C4196, 0x801C41B6,
+    0x801C41D6, 0x801C41F6, 0x801C4216, 0x801C4236, 0x801C4256, 0x801C4772, 0x801C4EDA, 0x801C522E, 0x801C69D6,
+    0x801C6B6E, 0x801C6E86, 0x801C8042, 0x801C8152, 0x801C8322, 0x801D9526, 0x801D954A, 0x801D956E, 0x801D9592,
+    0x801D95B6, 0x801D95DA, 0x801D95FE, 0x801E304E, 0x801E34A2, 0x801E824E, 0x801E8272, 0x801E8DF6, 0x801EBCFE,
+    0x801EBD1A, 0x801EEBB6, 0x801EEBD6, 0x801EEBFA, 0x801EEC1E, 0x801EEC42, 0x801EEECA, 0x801F4BC6, 0x801F524E,
+    0x801F5A0A, 0x801F5C0E, 0x801F5D62, 0x801F69EE, 0x801F768E, 0x802024AA, 0x80202522, 0x8020253A, 0x802025B2,
+    0x802025BE, 0x80202636, 0x80203382, 0x80204FFA, 0x8020BCBA, 0x8020BCC6, 0x8020BF36, 0x8020C43A, 0x8020EEAE,
+    0x80231906, 0x80231A86, 0x80231CEA
 ]
 
 ZERO_SHORTS = [
@@ -366,7 +369,24 @@ CUSTOM_WORDS = {
     0x802148A4: 0x40820010,
     0x802148A8: 0x881DF81B,
     0x802148BC: 0x2C000002,
-    0x802148B0: 0x4182005C
+    0x802148B0: 0x4182005C,
+    0x8065771E: 0x001E001E
+}
+
+SHOP_WORDS = {
+    0x80231A50: 0x38E00001,
+    0x80231A64: 0x98E3F9E3,
+    0x80231A70: 0x60000000,
+    0x80231B3C: 0x8806F916,
+    0x80231B50: 0x8806F917,
+    0x80231B80: 0x8806F916,
+    0x80231B94: 0x8806F917,
+    0x80231BC4: 0x8806F916,
+    0x80231BD8: 0x8806F917,
+    0x80657708: 0x00030005,
+    0x8065770C: 0x00050005,
+    0x80657710: 0x0005000A,
+    0x80657714: 0x000A000F
 }
 
 CUTSCENES = [
@@ -433,7 +453,9 @@ class MarioSuperSluggersContext(CommonContext):
         self.dolphin_status: str = CONNECTION_INITIAL_STATUS
 
         self.starting_captain: int = 0
+        self.goal_condition: int = 0
         self.goal_characters: int = 72
+        self.randomize_shops: int = 0
         self.reduced_cutscenes: bool = False
         self.current_stage_name: str = "Baseball Kingdom"
         self.world_version: Utils.Version = WORLD_VERSION
@@ -472,8 +494,10 @@ class MarioSuperSluggersContext(CommonContext):
         :param args: The command arguments.
         """
         if cmd == "Connected":
+            self.goal_condition = args["slot_data"]["goal_condition"] or 0
             self.goal_characters = args["slot_data"]["goal_characters"]
             self.starting_captain = args["slot_data"]["starting_captain"]
+            self.randomize_shops = args["slot_data"]["randomize_shops"] or 0
             self.reduced_cutscenes = args["slot_data"]["reduced_cutscenes"]
             self.world_version = Utils.tuplize_version(args["slot_data"]["world_version"])
             if self.world_version > WORLD_VERSION:
@@ -546,6 +570,8 @@ def _give_item(item_id: int) -> bool:
 
     if addr == COIN_COUNT:
         write_short(addr, min(read_short(addr) + value, 999))
+    elif addr in ITEM_COUNTS:
+        dolphin_memory_engine.write_byte(addr, min(dolphin_memory_engine.read_byte(addr) + value, 99))
     else:
         dolphin_memory_engine.write_byte(addr, value)
 
@@ -610,7 +636,7 @@ async def check_locations(ctx: MarioSuperSluggersContext) -> None:
         if checked:
             ctx.locations_checked.add(id)
 
-    if not ctx.finished_game and dolphin_memory_engine.read_byte(GOAL_FLAG) == 1:
+    if not ctx.finished_game and dolphin_memory_engine.read_byte(GOAL_FLAG[ctx.goal_condition]) == 1:
         await ctx.send_msgs([{"cmd": "StatusUpdate", "status": ClientStatus.CLIENT_GOAL}])
         ctx.finished_game = True
 
@@ -700,6 +726,9 @@ def init_game(ctx):
         dolphin_memory_engine.write_byte(addr, CUSTOM_BYTES[addr])
     for addr in CUSTOM_WORDS:
         dolphin_memory_engine.write_word(addr, CUSTOM_WORDS[addr])
+    if ctx.randomize_shops == 2:
+        for addr in SHOP_WORDS:
+            dolphin_memory_engine.write_word(addr, SHOP_WORDS[addr])
     if ctx.reduced_cutscenes:
         for i in CUTSCENES:
             addr = i >> 8

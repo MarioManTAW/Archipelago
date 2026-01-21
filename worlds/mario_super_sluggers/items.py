@@ -77,20 +77,22 @@ ITEM_DATA = {
     "Yellow Yoshi":         MarioSuperSluggersItemData(0x80E5532D02, ItemClassification.progression_skip_balancing),
     "Light Blue Yoshi":     MarioSuperSluggersItemData(0x80E5532E02, ItemClassification.progression_skip_balancing),
     "Pink Yoshi":           MarioSuperSluggersItemData(0x80E5532F02, ItemClassification.progression_skip_balancing),
-    "Day-night cycle":      MarioSuperSluggersItemData(0x80E55AE001, ItemClassification.progression_skip_balancing),
+    "Day-night cycle":      MarioSuperSluggersItemData(0x80E55AE001, ItemClassification.progression),
     "Fireball":             MarioSuperSluggersItemData(0x80E55AE301, ItemClassification.filler),
     "POW-Ball":             MarioSuperSluggersItemData(0x80E55AE501, ItemClassification.filler),
     "Mini Boo":             MarioSuperSluggersItemData(0x80E55AE701, ItemClassification.progression_skip_balancing),
-    "Toy Field Pass":       MarioSuperSluggersItemData(0x80E55BF401, ItemClassification.filler),
-    "Special Shop Pass":    MarioSuperSluggersItemData(0x80E55BF501, ItemClassification.filler),
-    "Sea Hut Key":          MarioSuperSluggersItemData(0x80E55BF701, ItemClassification.progression_skip_balancing),
+    "Luigi's Flashlight":   MarioSuperSluggersItemData(0x80E55BF201, ItemClassification.progression),
+    "Cruiser Pass":         MarioSuperSluggersItemData(0x80E55BF301, ItemClassification.progression),
+    "Toy Field Pass":       MarioSuperSluggersItemData(0x80E55BF401, ItemClassification.progression),
+    "Special Shop Pass":    MarioSuperSluggersItemData(0x80E55BF501, ItemClassification.progression),
+    "Sea Hut Key":          MarioSuperSluggersItemData(0x80E55BF701, ItemClassification.progression),
     "Baby Daisy's Rattle":  MarioSuperSluggersItemData(0x80E55BF801, ItemClassification.progression_skip_balancing),
     "Toad Statue":          MarioSuperSluggersItemData(0x80E55BF901, ItemClassification.progression_skip_balancing),
     "Daisy Statue":         MarioSuperSluggersItemData(0x80E55BFA01, ItemClassification.progression),
     "Stone tablet piece A": MarioSuperSluggersItemData(0x80E55BFB01, ItemClassification.progression),
     "Stone tablet piece B": MarioSuperSluggersItemData(0x80E55BFC01, ItemClassification.progression),
     "Stone tablet piece C": MarioSuperSluggersItemData(0x80E55BFD01, ItemClassification.progression),
-    "Brush":                MarioSuperSluggersItemData(0x80E55BFE01, ItemClassification.progression_skip_balancing),
+    "Brush":                MarioSuperSluggersItemData(0x80E55BFE01, ItemClassification.progression),
     "5 coins":              MarioSuperSluggersItemData(0x80E55C0A05, ItemClassification.filler),
     "10 coins":             MarioSuperSluggersItemData(0x80E55C0A0A, ItemClassification.filler),
     "20 coins":             MarioSuperSluggersItemData(0x80E55C0A14, ItemClassification.filler),
@@ -100,6 +102,14 @@ ITEM_DATA = {
     "70 coins":             MarioSuperSluggersItemData(0x80E55C0A46, ItemClassification.filler),
     "80 coins":             MarioSuperSluggersItemData(0x80E55C0A50, ItemClassification.filler),
     "100 coins":            MarioSuperSluggersItemData(0x80E55C0A64, ItemClassification.filler),
+    "Nice Bat":             MarioSuperSluggersItemData(0x80E55DAC01, ItemClassification.filler),
+    "Power Bat":            MarioSuperSluggersItemData(0x80E55DAD01, ItemClassification.filler),
+    "Dr. K":                MarioSuperSluggersItemData(0x80E55DAE01, ItemClassification.filler),
+    "Lucky Glove":          MarioSuperSluggersItemData(0x80E55DAF01, ItemClassification.filler),
+    "Dash Spikes":          MarioSuperSluggersItemData(0x80E55DB001, ItemClassification.filler),
+    "Buddy Badge":          MarioSuperSluggersItemData(0x80E55DB101, ItemClassification.filler),
+    "Error Booster":        MarioSuperSluggersItemData(0x80E55DB201, ItemClassification.filler),
+    "Charge Bat":           MarioSuperSluggersItemData(0x80E55DB301, ItemClassification.filler),
 }
 
 ITEM_NAME_TO_ID = {name: data.code for name, data in ITEM_DATA.items()}
@@ -172,6 +182,11 @@ ITEM_NAME_GROUPS = {
     }
 }
 
+MINIGAMES = [
+    "Play Bob-omb Derby", "Play Wall Ball", "Play Barrel Basher", "Play Gem Catch", "Play Piranha Panic",
+    "Play Blooper Baserun", "Play Ghost K", "Play Toy Field", "Play Graffiti Runner", "Play Bowser Pinball"
+]
+
 def get_filler_item_name() -> str:
     return "5 coins"
 
@@ -193,6 +208,21 @@ def create_items(world: MarioSuperSluggersWorld) -> None:
     items_to_create += ["40 coins"]
     items_to_create += ["50 coins"] * 3
     items_to_create += ["100 coins"]
+    game_items = [
+        "Nice Bat", "Power Bat", "Dr. K", "Lucky Glove", "Dash Spikes", "Buddy Badge", "Error Booster", "Charge Bat"
+    ]
+    if world.options.randomize_shops == 2:
+        items_to_create += game_items * 5
+    else:
+        for item in game_items:
+            items_to_create.remove(item)
+        if world.options.randomize_shops == 0:
+            items_to_create.remove("Luigi's Flashlight")
+            items_to_create.remove("Cruiser Pass")
+            world.get_location("Blue Pianta's shop: Buy Luigi's Flashlight")\
+                .place_locked_item(create_item(world, "Luigi's Flashlight"))
+            world.get_location("Toadsworth's shop: Buy Cruiser Pass")\
+                .place_locked_item(create_item(world, "Cruiser Pass"))
     number_of_unfilled_locations = len(world.multiworld.get_unfilled_locations(world.player))
     items_to_create += [get_filler_item_name() for _ in range(number_of_unfilled_locations - len(items_to_create))]
     world.multiworld.itempool += [create_item(world, item) for item in items_to_create]

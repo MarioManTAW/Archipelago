@@ -3,6 +3,16 @@ from dataclasses import dataclass
 from Options import Range, PerGameCommonOptions, StartInventoryPool, Choice, Toggle
 
 
+class GoalCondition(Choice):
+    """Choose what you need to do to win.
+    Defeat Bowser Monsters: Unlock a full team and the day-night cycle, then defeat the Bowser Monsters in a game.
+    Play Badge: Unlock and win all minigames (including Toy Field)."""
+    display_name = "Goal Condition"
+    option_defeat_bowser_monsters = 0
+    option_play_badge = 1
+    default = 0
+
+
 class GoalCharacters(Range):
     """How many characters you need to have unlocked in order to fight Bowser Jr. and Bowser."""
     display_name = "Goal Characters"
@@ -23,13 +33,28 @@ class StartingCaptain(Choice):
     default = "random"
 
 
+class RandomizeShops(Choice):
+    """Choose whether shop items are randomized. Logical access to at least one minigame is expected in order to shop.
+    Full: All shop items are randomized.
+    Key Items Only: Luigi's Flashlight and the Cruiser Pass are randomized, all other shop items are unchanged.
+    None: All shop items are in their vanilla locations."""
+    display_name = "Randomize Shops"
+    option_full = 2
+    option_key_items_only = 1
+    option_none = 0
+    default = 0
+
+
 class ReducedCutscenes(Toggle):
     """Marks certain one-time cutscenes as already watched to speed up gameplay."""
     display_name = "Reduced Cutscenes"
 
+
 @dataclass
 class MarioSuperSluggersOptions(PerGameCommonOptions):
+    goal_condition: GoalCondition
     goal_characters: GoalCharacters
     starting_captain: StartingCaptain
+    randomize_shops: RandomizeShops
     reduced_cutscenes: ReducedCutscenes
     start_inventory_from_pool: StartInventoryPool

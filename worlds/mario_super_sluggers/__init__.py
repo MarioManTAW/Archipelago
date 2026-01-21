@@ -72,7 +72,7 @@ class MarioSuperSluggersWorld(World):
     def fill_slot_data(self) -> dict[str, Any]:
         starting_captains = [0, 4, 6, 2, 10]
         starting_captain = starting_captains[self.options.starting_captain]
-        slot_data = self.options.as_dict("goal_characters", "reduced_cutscenes")
+        slot_data = self.options.as_dict("goal_condition", "goal_characters", "randomize_shops", "reduced_cutscenes")
         slot_data["starting_captain"] = starting_captain
         slot_data["world_version"] = self.world_version.as_simple_string()
         return slot_data

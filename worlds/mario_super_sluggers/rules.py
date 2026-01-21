@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 from worlds.generic.Rules import set_rule
+from .items import MINIGAMES
 
 if TYPE_CHECKING:
     from . import MarioSuperSluggersWorld
@@ -85,9 +86,19 @@ def set_location_rules(world: MarioSuperSluggersWorld) -> None:
     set_rule(world.get_location("Yoshi Park: Left stump after Shy Guys"), has_peach)
     set_rule(world.get_location("Yoshi Park: Right stump after Shy Guys"), has_peach)
     set_rule(world.get_location("Peach Ice Garden: Baby Daisy's Rattle"), has_wario)
-    set_rule(world.get_location("Bowser Castle: Defeat Bowser Monsters"),
+    set_rule(world.get_location("Blue Pianta's shop: Buy Luigi's Flashlight"),
+             lambda state: state.has("Luigi", world.player))
+    set_rule(world.get_location("Toadsworth's shop: Buy Cruiser Pass"),
+             lambda state: state.has("Daisy", world.player))
+    set_rule(world.get_location("Mario Stadium: Play Bob-omb Derby"),
              lambda state: state.has("Day-night cycle", world.player))
+    set_rule(world.get_location("Peach Ice Garden: Play Wall Ball"),
+             lambda state: state.has("Day-night cycle", world.player))
+    set_rule(world.get_location("Baseball Kingdom: Play all minigames"),
+             lambda state: state.has_all(MINIGAMES, world.player))
 
 
 def set_completion_condition(world: MarioSuperSluggersWorld) -> None:
-    world.multiworld.completion_condition[world.player] = lambda state: state.has("Victory", world.player)
+    goal_events = ["Defeat Bowser Monsters", "Play Badge"]
+    world.multiworld.completion_condition[world.player] = lambda state:\
+        state.has(goal_events[world.options.goal_condition], world.player)
