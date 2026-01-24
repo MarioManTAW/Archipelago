@@ -45,6 +45,11 @@ class RandomizeShops(Choice):
     default = 0
 
 
+class RandomizeMusic(Toggle):
+    """Shuffles music between different stadiums, overworld locations, and menus."""
+    display_name = "Randomize Music"
+
+
 class ReducedCutscenes(Toggle):
     """Marks certain one-time cutscenes as already watched to speed up gameplay."""
     display_name = "Reduced Cutscenes"
@@ -56,5 +61,6 @@ class MarioSuperSluggersOptions(PerGameCommonOptions):
     goal_characters: GoalCharacters
     starting_captain: StartingCaptain
     randomize_shops: RandomizeShops
+    randomize_music: RandomizeMusic
     reduced_cutscenes: ReducedCutscenes
     start_inventory_from_pool: StartInventoryPool

@@ -337,7 +337,9 @@ NOPS = [0x801E0270, 0x801E3114, 0x801E4AF8, 0x801E4B74, 0x801E6684, 0x802390F8]
 
 BRANCH = [0x801E8E18]
 
-CUSTOM_BYTES = {}
+CUSTOM_BYTES = {
+    0x80E55DBA: 0x01
+}
 
 CUSTOM_WORDS = {
     0x8020F99C: 0x8803024C,
@@ -390,6 +392,28 @@ SHOP_WORDS = {
     0x80657718: 0x000A000F,
     0x8065771C: 0x000F001E,
     0x8078FBC0: 0x00000000,
+}
+
+MUSIC = {
+    0x06: [0x8062E60B],
+    0x07: [0x8062E613],
+    0x08: [0x8062E627],
+    0x09: [0x8062E623],
+    0x0A: [0x8062E62B],
+    0x0B: [0x8062E61B],
+    0x0C: [0x8062E61F],
+    0x0D: [0x8062E60F],
+    0x0E: [0x8062E617],
+    0x0F: [0x8062E62C],
+    0x12: [0x80204B87, 0x80204B9F, 0x80205503],
+    0x13: [0x80205557],
+    0x14: [0x8018933C, 0x80192037],
+    0x15: [0x8020ACC7, 0x8020ACAF],
+    0x16: [0x8020D92B, 0x8020D943],
+    0x17: [0x80200927, 0x8020093F],
+    0x18: [0x802129C7, 0x802129DF],
+    0x19: [0x8021866B, 0x80218683],
+    0x4B: [0x80205583],
 }
 
 CUTSCENES = [
@@ -459,6 +483,7 @@ class MarioSuperSluggersContext(CommonContext):
         self.goal_condition: int = 0
         self.goal_characters: int = 72
         self.randomize_shops: int = 0
+        self.music: dict[int,int] = {}
         self.reduced_cutscenes: bool = False
         self.current_stage_name: str = "Baseball Kingdom"
         self.world_version: Utils.Version = WORLD_VERSION
@@ -501,6 +526,7 @@ class MarioSuperSluggersContext(CommonContext):
             self.goal_characters = args["slot_data"]["goal_characters"]
             self.starting_captain = args["slot_data"]["starting_captain"]
             self.randomize_shops = args["slot_data"]["randomize_shops"] or 0
+            self.music = args["slot_data"]["music"] or {}
             self.reduced_cutscenes = args["slot_data"]["reduced_cutscenes"]
             self.world_version = Utils.tuplize_version(args["slot_data"]["world_version"])
             if self.world_version > WORLD_VERSION:
@@ -713,7 +739,7 @@ def check_ingame() -> bool:
     return dolphin_memory_engine.read_byte(IN_GAME_FLAG) != 0
 
 
-def init_game(ctx):
+def init_game(ctx: MarioSuperSluggersContext):
     ctx.locations_checked = set()
     for addr in REQ_CHARS:
         dolphin_memory_engine.write_byte(addr, ctx.goal_characters)
@@ -732,6 +758,9 @@ def init_game(ctx):
     if ctx.randomize_shops == 2:
         for addr in SHOP_WORDS:
             dolphin_memory_engine.write_word(addr, SHOP_WORDS[addr])
+    for track in ctx.music:
+        for addr in MUSIC[int(track)]:
+            dolphin_memory_engine.write_byte(addr, ctx.music[track])
     if ctx.reduced_cutscenes:
         for i in CUTSCENES:
             addr = i >> 8

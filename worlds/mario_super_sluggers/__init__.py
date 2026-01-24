@@ -74,5 +74,13 @@ class MarioSuperSluggersWorld(World):
         starting_captain = starting_captains[self.options.starting_captain]
         slot_data = self.options.as_dict("goal_condition", "goal_characters", "randomize_shops", "reduced_cutscenes")
         slot_data["starting_captain"] = starting_captain
+        if self.options.randomize_music:
+            music = [
+                0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18,
+                0x19, 0x4B
+            ]
+            music_keys = [k for k in music]
+            self.random.shuffle(music)
+            slot_data["music"] = dict(zip(music_keys, music))
         slot_data["world_version"] = self.world_version.as_simple_string()
         return slot_data
