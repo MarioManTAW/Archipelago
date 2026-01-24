@@ -110,6 +110,9 @@ ITEM_DATA = {
     "Buddy Badge":          MarioSuperSluggersItemData(0x80E55DB101, ItemClassification.filler),
     "Error Booster":        MarioSuperSluggersItemData(0x80E55DB201, ItemClassification.filler),
     "Charge Bat":           MarioSuperSluggersItemData(0x80E55DB301, ItemClassification.filler),
+    "Star Candy":           MarioSuperSluggersItemData(0x80E55DB401, ItemClassification.filler),
+    "x2 Star Candy":        MarioSuperSluggersItemData(0x80E55DB501, ItemClassification.filler),
+    "Superstar":            MarioSuperSluggersItemData(0x80E55DB601, ItemClassification.filler),
 }
 
 ITEM_NAME_TO_ID = {name: data.code for name, data in ITEM_DATA.items()}
@@ -211,10 +214,15 @@ def create_items(world: MarioSuperSluggersWorld) -> None:
     game_items = [
         "Nice Bat", "Power Bat", "Dr. K", "Lucky Glove", "Dash Spikes", "Buddy Badge", "Error Booster", "Charge Bat"
     ]
+    special_game_items = [
+        "Star Candy", "x2 Star Candy", "Superstar"
+    ]
     if world.options.randomize_shops == 2:
         items_to_create += game_items * 5
     else:
         for item in game_items:
+            items_to_create.remove(item)
+        for item in special_game_items:
             items_to_create.remove(item)
         if world.options.randomize_shops == 0:
             items_to_create.remove("Luigi's Flashlight")

@@ -167,6 +167,9 @@ LOCATION_NAME_TO_ID = {
     "Secret shop: Buy Buddy Badge":                       0x80E5551401,
     "Secret shop: Buy Error Booster":                     0x80E5551501,
     "Secret shop: Buy Charge Bat":                        0x80E5551601,
+    "Secret shop: Buy Star Candy":                        0x80E5551701,
+    "Secret shop: Buy x2 Star Candy":                     0x80E5551801,
+    "Secret shop: Buy Superstar":                         0x80E5551901,
 }
 
 
@@ -505,4 +508,7 @@ def create_locations(world: MarioSuperSluggersWorld) -> None:
             "Secret shop: Buy Buddy Badge",
             "Secret shop: Buy Error Booster",
             "Secret shop: Buy Charge Bat",
+            "Secret shop: Buy Star Candy",
+            "Secret shop: Buy x2 Star Candy",
+            "Secret shop: Buy Superstar",
         ]), MarioSuperSluggersLocation)
