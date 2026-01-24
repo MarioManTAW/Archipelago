@@ -217,14 +217,14 @@ def create_items(world: MarioSuperSluggersWorld) -> None:
     special_game_items = [
         "Star Candy", "x2 Star Candy", "Superstar"
     ]
-    if world.options.randomize_shops == 2:
+    if world.options.randomize_shops == world.options.randomize_shops.option_full:
         items_to_create += game_items * 5
     else:
         for item in game_items:
             items_to_create.remove(item)
         for item in special_game_items:
             items_to_create.remove(item)
-        if world.options.randomize_shops == 0:
+        if world.options.randomize_shops == world.options.randomize_shops.option_none:
             items_to_create.remove("Luigi's Flashlight")
             items_to_create.remove("Cruiser Pass")
             world.get_location("Blue Pianta's shop: Buy Luigi's Flashlight")\

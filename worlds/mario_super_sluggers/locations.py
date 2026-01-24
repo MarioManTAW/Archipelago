@@ -443,7 +443,7 @@ def create_locations(world: MarioSuperSluggersWorld) -> None:
         item_type=items.MarioSuperSluggersItem
     )
 
-    if world.options.randomize_shops == 2:
+    if world.options.randomize_shops == world.options.randomize_shops.option_full:
         mario_shop.add_locations(get_location_names_with_ids([
             "Blue Pianta's shop: Buy Nice Bat",
             "Blue Pianta's shop: Buy Power Bat",
