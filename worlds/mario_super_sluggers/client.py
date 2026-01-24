@@ -522,11 +522,11 @@ class MarioSuperSluggersContext(CommonContext):
         :param args: The command arguments.
         """
         if cmd == "Connected":
-            self.goal_condition = args["slot_data"]["goal_condition"] if "goal_condition" in args["slot_data"] else 0
+            if "goal_condition" in args["slot_data"]: self.goal_condition = args["slot_data"]["goal_condition"]
             self.goal_characters = args["slot_data"]["goal_characters"]
             self.starting_captain = args["slot_data"]["starting_captain"]
-            self.randomize_shops = args["slot_data"]["randomize_shops"] if "randomize_shops" in args["slot_data"] else 0
-            self.music = args["slot_data"]["music"] if "music" in args["slot_data"] else {}
+            if "randomize_shops" in args["slot_data"]: self.randomize_shops = args["slot_data"]["randomize_shops"]
+            if "music" in args["slot_data"]: self.music = args["slot_data"]["music"]
             self.reduced_cutscenes = args["slot_data"]["reduced_cutscenes"]
             self.world_version = Utils.tuplize_version(args["slot_data"]["world_version"])
             if self.world_version > WORLD_VERSION:
