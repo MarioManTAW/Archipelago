@@ -72,7 +72,8 @@ class MarioSuperSluggersWorld(World):
     def fill_slot_data(self) -> dict[str, Any]:
         starting_captains = [0, 4, 6, 2, 10]
         starting_captain = starting_captains[self.options.starting_captain]
-        slot_data = self.options.as_dict("goal_condition", "goal_characters", "randomize_shops", "reduced_cutscenes")
+        slot_data = self.options.as_dict("goal_condition", "goal_characters", "randomize_stars", "randomize_shops",
+                                         "reduced_cutscenes")
         slot_data["starting_captain"] = starting_captain
         if self.options.randomize_music:
             music = [

@@ -94,11 +94,99 @@ def set_location_rules(world: MarioSuperSluggersWorld) -> None:
              lambda state: state.has("Day-night cycle", world.player))
     set_rule(world.get_location("Peach Ice Garden: Play Wall Ball"),
              lambda state: state.has("Day-night cycle", world.player))
+    if world.options.randomize_stars or world.options.goal_condition == world.options.goal_condition.option_star_badge:
+        set_rule(world.get_location("Bowser Castle: Unlock star for Mario"),
+                lambda state: state.has("Mario", world.player))
+        set_rule(world.get_location("Bowser Castle: Unlock star for Luigi"),
+                lambda state: state.has("Luigi", world.player))
+        set_rule(world.get_location("Bowser Castle: Unlock star for Donkey Kong"),
+                lambda state: state.has("Donkey Kong", world.player))
+        set_rule(world.get_location("Bowser Castle: Unlock star for Diddy Kong"),
+                lambda state: state.has("Diddy Kong", world.player))
+        set_rule(world.get_location("Bowser Castle: Unlock star for Peach"),
+                lambda state: state.has("Peach", world.player))
+        set_rule(world.get_location("Bowser Castle: Unlock star for Daisy"),
+                lambda state: state.has("Daisy", world.player))
+        set_rule(world.get_location("Bowser Castle: Unlock star for Yoshi"),
+                lambda state: state.has_any([
+                    "Yoshi", "Red Yoshi", "Blue Yoshi", "Yellow Yoshi", "Light Blue Yoshi", "Pink Yoshi"
+                ], world.player))
+        set_rule(world.get_location("Bowser Castle: Unlock star for Baby Mario"),
+                lambda state: state.has("Baby Mario", world.player))
+        set_rule(world.get_location("Bowser Castle: Unlock star for Baby Luigi"),
+                lambda state: state.has("Baby Luigi", world.player))
+        set_rule(world.get_location("Bowser Castle: Unlock star for Wario"),
+                lambda state: state.has("Wario", world.player))
+        set_rule(world.get_location("Bowser Castle: Unlock star for Waluigi"),
+                lambda state: state.has("Waluigi", world.player))
+        set_rule(world.get_location("Bowser Castle: Unlock star for Koopa"),
+                lambda state: state.has_any(["Koopa", "Red Koopa"], world.player))
+        set_rule(world.get_location("Bowser Castle: Unlock star for Toad"),
+                lambda state: state.has_any([
+                    "Red Toad", "Blue Toad", "Yellow Toad", "Green Toad", "Purple Toad"
+                ], world.player))
+        set_rule(world.get_location("Bowser Castle: Unlock star for Boo"),
+                lambda state: state.has("Boo", world.player))
+        set_rule(world.get_location("Bowser Castle: Unlock star for Toadette"),
+                lambda state: state.has("Toadette", world.player))
+        set_rule(world.get_location("Bowser Castle: Unlock star for Shy Guy"),
+                lambda state: state.has_any([
+                    "Shy Guy", "Blue Shy Guy", "Yellow Shy Guy", "Green Shy Guy", "Gray Shy Guy"
+                ], world.player))
+        set_rule(world.get_location("Bowser Castle: Unlock star for Birdo"),
+                lambda state: state.has("Birdo", world.player))
+        set_rule(world.get_location("Bowser Castle: Unlock star for Monty Mole"),
+                lambda state: state.has("Monty Mole", world.player))
+        set_rule(world.get_location("Bowser Castle: Unlock star for Paratroopa"),
+                lambda state: state.has_any(["Paratroopa", "Green Paratroopa"], world.player))
+        set_rule(world.get_location("Bowser Castle: Unlock star for Pianta"),
+                lambda state: state.has_any(["Blue Pianta", "Red Pianta", "Yellow Pianta"], world.player))
+        set_rule(world.get_location("Bowser Castle: Unlock star for Noki"),
+                lambda state: state.has_any(["Blue Noki", "Red Noki", "Green Noki"], world.player))
+        set_rule(world.get_location("Bowser Castle: Unlock star for Toadsworth"),
+                lambda state: state.has("Toadsworth", world.player))
+        set_rule(world.get_location("Bowser Castle: Unlock star for King Boo"),
+                lambda state: state.has("King Boo", world.player))
+        set_rule(world.get_location("Bowser Castle: Unlock star for Petey Piranha"),
+                lambda state: state.has("Petey Piranha", world.player))
+        set_rule(world.get_location("Bowser Castle: Unlock star for Dixie Kong"),
+                lambda state: state.has("Dixie Kong", world.player))
+        set_rule(world.get_location("Bowser Castle: Unlock star for Goomba"),
+                lambda state: state.has("Goomba", world.player))
+        set_rule(world.get_location("Bowser Castle: Unlock star for Paragoomba"),
+                lambda state: state.has("Paragoomba", world.player))
+        set_rule(world.get_location("Bowser Castle: Unlock star for Wiggler"),
+                lambda state: state.has("Wiggler", world.player))
+        set_rule(world.get_location("Bowser Castle: Unlock star for Blooper"),
+                lambda state: state.has("Blooper", world.player))
+        set_rule(world.get_location("Bowser Castle: Unlock star for Funky Kong"),
+                lambda state: state.has("Funky Kong", world.player))
+        set_rule(world.get_location("Bowser Castle: Unlock star for Tiny Kong"),
+                lambda state: state.has("Tiny Kong", world.player))
+        set_rule(world.get_location("Bowser Castle: Unlock star for Kritter"),
+                lambda state: state.has_any(["Kritter", "Blue Kritter", "Red Kritter", "Brown Kritter"], world.player))
+        set_rule(world.get_location("Bowser Castle: Unlock star for King K. Rool"),
+                lambda state: state.has("King K. Rool", world.player))
+        set_rule(world.get_location("Bowser Castle: Unlock star for Baby Peach"),
+                lambda state: state.has("Baby Peach", world.player))
+        set_rule(world.get_location("Bowser Castle: Unlock star for Baby Daisy"),
+                lambda state: state.has("Baby Daisy", world.player))
+        set_rule(world.get_location("Bowser Castle: Unlock star for Baby DK"),
+                lambda state: state.has("Baby DK", world.player))
+        set_rule(world.get_location("Baseball Kingdom: Star all characters"),
+                lambda state: state.count_group_unique("Stars", world.player) >= 41 and\
+                    state.has("Defeat Bowser Monsters", world.player))
     set_rule(world.get_location("Baseball Kingdom: Play all minigames"),
              lambda state: state.has_all(MINIGAMES, world.player))
+    set_rule(world.get_location("Baseball Kingdom: Recruit all characters"),
+             lambda state: state.has_all(["Mario", "Donkey Kong", "Peach", "Yoshi", "Wario",
+                                          "Blue Noki", "Green Noki", "Boo", "Mini Boo", "Defeat Bowser Monsters",
+                                          "Sea Hut Key", "Baby Daisy's Rattle", "Toad Statue", "Daisy Statue",
+                                          "Stone tablet piece A", "Stone tablet piece B", "Stone tablet piece C",
+                                          "Brush"], world.player))
 
 
 def set_completion_condition(world: MarioSuperSluggersWorld) -> None:
-    goal_events = ["Defeat Bowser Monsters", "Play Badge"]
+    goal_events = ["Defeat Bowser Monsters", "Play Badge", "Friend Badge", "Star Badge"]
     world.multiworld.completion_condition[world.player] = lambda state:\
         state.has(goal_events[world.options.goal_condition], world.player)

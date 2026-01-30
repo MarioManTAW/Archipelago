@@ -6,10 +6,14 @@ from Options import Range, PerGameCommonOptions, StartInventoryPool, Choice, Tog
 class GoalCondition(Choice):
     """Choose what you need to do to win.
     Defeat Bowser Monsters: Unlock a full team and the day-night cycle, then defeat the Bowser Monsters in a game.
-    Play Badge: Unlock and win all minigames (including Toy Field)."""
+    Play Badge: Unlock and win all minigames (including Toy Field).
+    Friend Badge: Recruit all characters.
+    Star Badge: Have star status on every character, then defeat the Bowser Monsters in a game."""
     display_name = "Goal Condition"
     option_defeat_bowser_monsters = 0
     option_play_badge = 1
+    option_friend_badge = 2
+    option_star_badge = 3
     default = 0
 
 
@@ -45,6 +49,11 @@ class RandomizeShops(Choice):
     default = 0
 
 
+class RandomizeStars(Toggle):
+    """Adds a check for achieving star status with each character and randomizes the stars into the pool."""
+    display_name = "Randomize Stars"
+
+
 class RandomizeMusic(Toggle):
     """Shuffles music between different stadiums, overworld locations, and menus."""
     display_name = "Randomize Music"
@@ -61,6 +70,7 @@ class MarioSuperSluggersOptions(PerGameCommonOptions):
     goal_characters: GoalCharacters
     starting_captain: StartingCaptain
     randomize_shops: RandomizeShops
+    randomize_stars: RandomizeStars
     randomize_music: RandomizeMusic
     reduced_cutscenes: ReducedCutscenes
     start_inventory_from_pool: StartInventoryPool
