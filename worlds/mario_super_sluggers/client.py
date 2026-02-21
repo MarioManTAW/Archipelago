@@ -61,6 +61,7 @@ STAGE_NAMES = {
 
 SAFE_MISSIONS = [0x00, 0x01, 0x02, 0x0F, 0x12, 0x13, 0x14, 0x15, 0x24, 0x29, 0x2F, 0x31]
 
+MISSION_OPPONENT = 0x80E55C0E
 CHARACTERS = [
     0x80E552E9, 0x80E552EA, 0x80E552EB, 0x80E552EC, 0x80E552ED, 0x80E552EE, 0x80E552EF, 0x80E552F0, 0x80E552F1,
     0x80E552F3, 0x80E552F4, 0x80E552F5, 0x80E552F6, 0x80E552F7, 0x80E552F8, 0x80E552F9, 0x80E552FA, 0x80E552FB,
@@ -700,23 +701,27 @@ async def check_mission_condition() -> None:
     :param ctx: Mario Super Sluggers client context.
     """
     mission = dolphin_memory_engine.read_byte(CURR_MISSION)
+    opponent = read_short(MISSION_OPPONENT)
     if mission in MISSION_CHARS:
         valid = False
         for char in MISSION_CHARS[mission]:
-            valid = dolphin_memory_engine.read_byte(char) == 2
+            valid = char - CHARACTERS[0] != opponent and dolphin_memory_engine.read_byte(char) == 2
             if valid: break
         if not valid:
             dolphin_memory_engine.write_byte(CURR_MISSION, random.choice(SAFE_MISSIONS))
             return
     if mission in MISSION_COUNTS:
-        valid = [dolphin_memory_engine.read_byte(addr) for addr in CHARACTERS].count(0x02) >= MISSION_COUNTS[mission]
+        valid = [
+            dolphin_memory_engine.read_byte(addr) for addr in CHARACTERS if addr - CHARACTERS[0] != opponent
+        ].count(0x02) >= MISSION_COUNTS[mission]
         if not valid:
             dolphin_memory_engine.write_byte(CURR_MISSION, random.choice(SAFE_MISSIONS))
             return
     if mission in CHEMISTRY_MISSIONS:
         valid = False
         for pair in CHEMISTRY_PAIRS:
-            valid = dolphin_memory_engine.read_byte(pair[0]) == 2 and dolphin_memory_engine.read_byte(pair[1]) == 2
+            valid = pair[0] - CHARACTERS[0] != opponent and pair[1] - CHARACTERS[0] != opponent and\
+                dolphin_memory_engine.read_byte(pair[0]) == 2 and dolphin_memory_engine.read_byte(pair[1]) == 2
             if valid: break
         if not valid:
             dolphin_memory_engine.write_byte(CURR_MISSION, random.choice(SAFE_MISSIONS))
