@@ -26,7 +26,7 @@ CONNECTION_LOST_STATUS = (
 CONNECTION_CONNECTED_STATUS = "Dolphin connected successfully."
 CONNECTION_INITIAL_STATUS = "Dolphin connection has not been initiated."
 
-WORLD_VERSION = Utils.tuplize_version("0.2.2")
+WORLD_VERSION = Utils.tuplize_version("0.2.3")
 
 # The expected index for the following item that should be received.
 EXPECTED_INDEX_ADDR = 0x80E55000
@@ -70,6 +70,10 @@ CHARACTERS = [
     0x80E55314, 0x80E55315, 0x80E55316, 0x80E55317, 0x80E55318, 0x80E5531F, 0x80E55320, 0x80E55321, 0x80E55322,
     0x80E55323, 0x80E55324, 0x80E55325, 0x80E55326, 0x80E55327, 0x80E55328, 0x80E55329, 0x80E5532A, 0x80E5532B,
     0x80E5532C, 0x80E5532D, 0x80E5532E, 0x80E5532F
+]
+CAPTAINS = [
+    0x80E552E9, 0x80E552EA, 0x80E552EB, 0x80E552EC, 0x80E552ED, 0x80E552EE, 0x80E552EF, 0x80E552F3, 0x80E552F4,
+    0x80E552FA
 ]
 
 CHEMISTRY_MISSIONS = [0x2A, 0x2B, 0x3A, 0x3B, 0x3C, 0x3D, 0x3E, 0x3F, 0x40, 0x41]
@@ -287,6 +291,8 @@ MISSION_COUNTS = {
     0x40: 3,
     0x41: 3,
 }
+
+MISSION_CAPTAINS = [0x0E, 0x10, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x20, 0x21]
 
 MISSION_CHARS = {
     0x1B: [0x80E552EA, 0x80E552F1, 0x80E552FD, 0x80E55312, 0x80E55314],
@@ -711,9 +717,11 @@ async def check_mission_condition() -> None:
             dolphin_memory_engine.write_byte(CURR_MISSION, random.choice(SAFE_MISSIONS))
             return
     if mission in MISSION_COUNTS:
-        valid = [
-            dolphin_memory_engine.read_byte(addr) for addr in CHARACTERS if addr - CHARACTERS[0] != opponent
-        ].count(0x02) >= MISSION_COUNTS[mission]
+        unlocked = {
+            addr: dolphin_memory_engine.read_byte(addr) for addr in CHARACTERS if addr - CHARACTERS[0] != opponent
+        }
+        valid = len([1 for x in unlocked if unlocked[x] == 0x02]) >= MISSION_COUNTS[mission] and\
+            (not mission in MISSION_CAPTAINS or len([1 for x in CAPTAINS if unlocked[x] == 0x02]) >= 2)
         if not valid:
             dolphin_memory_engine.write_byte(CURR_MISSION, random.choice(SAFE_MISSIONS))
             return
