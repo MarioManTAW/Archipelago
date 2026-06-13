@@ -1,5 +1,6 @@
 from typing import Any
 from BaseClasses import Tutorial
+from Utils import tuplize_version
 from worlds.AutoWorld import World, WebWorld
 from worlds.LauncherComponents import Component, Type, components, launch_subprocess
 from . import items, locations, options, regions, rules
@@ -52,6 +53,8 @@ class MarioSuperSluggersWorld(World):
     item_name_to_id = items.ITEM_NAME_TO_ID
     item_name_groups = items.ITEM_NAME_GROUPS
     origin_region_name = "Baseball Kingdom"
+    ut_can_gen_without_yaml: bool = True
+    glitches_item_name = "Out-of-logic"
 
     def create_regions(self) -> None:
         regions.create_and_connect_regions(self)
@@ -69,6 +72,16 @@ class MarioSuperSluggersWorld(World):
     def create_items(self) -> None:
         items.create_items(self)
 
+    def generate_early(self) -> None:
+        re_gen_passthrough = getattr(self.multiworld, "re_gen_passthrough", {})
+        if re_gen_passthrough and self.game in re_gen_passthrough:
+            slot_data = re_gen_passthrough[self.game]
+            self.options.starting_captain.value = [0, 4, 6, 2, 10].index(slot_data["starting_captain"])
+            self.options.goal_condition.value = slot_data["goal_condition"]
+            self.options.goal_characters.value = slot_data["goal_characters"]
+            self.options.randomize_stars.value = slot_data["randomize_stars"]
+            self.options.randomize_shops.value = slot_data["randomize_shops"]
+
     def fill_slot_data(self) -> dict[str, Any]:
         starting_captains = [0, 4, 6, 2, 10]
         starting_captain = starting_captains[self.options.starting_captain]
@@ -84,4 +97,11 @@ class MarioSuperSluggersWorld(World):
             self.random.shuffle(music)
             slot_data["music"] = dict(zip(music_keys, music))
         slot_data["world_version"] = self.world_version.as_simple_string()
+        return slot_data
+
+    @staticmethod
+    def interpret_slot_data(slot_data: dict[str, Any]) -> dict[str, Any]:
+        if tuplize_version(slot_data["world_version"]) < tuplize_version("0.3.0"):
+            raise Exception("This multiworld was generated on an older APWorld, Universal Tracker will not work. "
+                            "Please refer to version 0.2.0 of the PopTracker pack for accurate tracking.")
         return slot_data

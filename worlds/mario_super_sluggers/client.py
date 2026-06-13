@@ -6,7 +6,13 @@ from typing import TYPE_CHECKING, Any, Optional
 import dolphin_memory_engine
 
 import Utils
-from CommonClient import ClientCommandProcessor, CommonContext, get_base_parser, gui_enabled, logger, server_loop
+tracker_loaded = False
+try:
+    from worlds.tracker.TrackerClient import TrackerGameContext as SuperContext
+    tracker_loaded = True
+except ModuleNotFoundError:
+    from CommonClient import CommonContext as SuperContext
+from CommonClient import ClientCommandProcessor, get_base_parser, gui_enabled, logger, server_loop
 from NetUtils import ClientStatus
 
 from .locations import LOCATION_NAME_TO_ID
@@ -428,7 +434,7 @@ class MarioSuperSluggersCommandProcessor(ClientCommandProcessor):
     This class handles commands specific to Mario Super Sluggers.
     """
 
-    def __init__(self, ctx: CommonContext):
+    def __init__(self, ctx: SuperContext):
         """
         Initialize the command processor with the provided context.
 
@@ -454,7 +460,7 @@ class MarioSuperSluggersCommandProcessor(ClientCommandProcessor):
         else:
             logger.info("Dolphin not connected.")
 
-class MarioSuperSluggersContext(CommonContext):
+class MarioSuperSluggersContext(SuperContext):
     """
     The context for the Mario Super Sluggers client.
 
@@ -464,6 +470,7 @@ class MarioSuperSluggersContext(CommonContext):
     command_processor = MarioSuperSluggersCommandProcessor
     game = "Mario Super Sluggers"
     items_handling = 0b111
+    tags = {"AP"}
 
     def __init__(self, server_address: Optional[str], password: Optional[str]) -> None:
         """
@@ -520,6 +527,8 @@ class MarioSuperSluggersContext(CommonContext):
         :param args: The command arguments.
         """
         if cmd == "Connected":
+            if tracker_loaded:
+                self.run_generator()
             if "goal_condition" in args["slot_data"]: self.goal_condition = args["slot_data"]["goal_condition"]
             self.goal_characters = args["slot_data"]["goal_characters"]
             self.starting_captain = args["slot_data"]["starting_captain"]
@@ -538,6 +547,7 @@ class MarioSuperSluggersContext(CommonContext):
             if dolphin_memory_engine.is_hooked() and self.dolphin_status == CONNECTION_CONNECTED_STATUS:
                 if check_ingame():
                     init_game(self)
+        super().on_package(cmd, args)
 
     def make_gui(self) -> type["kvui.GameManager"]:
         """

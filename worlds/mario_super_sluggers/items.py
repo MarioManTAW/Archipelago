@@ -167,6 +167,7 @@ ITEM_DATA = {
     "Star Candy":             MarioSuperSluggersItemData(0x80E55DB401, ItemClassification.filler),
     "x2 Star Candy":          MarioSuperSluggersItemData(0x80E55DB501, ItemClassification.filler),
     "Superstar":              MarioSuperSluggersItemData(0x80E55DB601, ItemClassification.filler),
+    "Out-of-logic":           MarioSuperSluggersItemData(0x8000000000, ItemClassification.progression),
 }
 
 ITEM_NAME_TO_ID = {name: data.code for name, data in ITEM_DATA.items()}
@@ -299,6 +300,8 @@ MINIGAMES = [
     "Play Bob-omb Derby", "Play Wall Ball", "Play Barrel Basher", "Play Gem Catch", "Play Piranha Panic",
     "Play Blooper Baserun", "Play Ghost K", "Play Toy Field", "Play Graffiti Runner", "Play Bowser Pinball"
 ]
+
+MINIGAMES_OR_OOL = MINIGAMES + ["Out-of-logic"]
 
 def get_filler_item_name() -> str:
     return "5 coins"
