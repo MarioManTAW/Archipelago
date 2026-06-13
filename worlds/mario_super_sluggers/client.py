@@ -747,6 +747,9 @@ def check_ingame() -> bool:
 
 def init_game(ctx: MarioSuperSluggersContext):
     ctx.locations_checked = set()
+    # Match new Wario City logic only for versions >= 0.3.0
+    if ctx.world_version >= Utils.tuplize_version("0.3.0"):
+        dolphin_memory_engine.write_byte(0x802153EE, 0xF8)
     for addr in REQ_CHARS:
         dolphin_memory_engine.write_byte(addr, ctx.goal_characters)
     for addr in MOVED_FLAGS:
