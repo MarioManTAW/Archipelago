@@ -32,7 +32,7 @@ CONNECTION_LOST_STATUS = (
 CONNECTION_CONNECTED_STATUS = "Dolphin connected successfully."
 CONNECTION_INITIAL_STATUS = "Dolphin connection has not been initiated."
 
-WORLD_VERSION = Utils.tuplize_version("0.2.3")
+WORLD_VERSION = Utils.tuplize_version("0.3.0")
 
 # The expected index for the following item that should be received.
 EXPECTED_INDEX_ADDR = 0x80E55000
