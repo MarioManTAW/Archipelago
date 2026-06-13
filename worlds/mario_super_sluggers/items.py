@@ -316,6 +316,7 @@ def create_items(world: MarioSuperSluggersWorld) -> None:
     starting_captains = ["Mario", "Peach", "Yoshi", "Donkey Kong", "Wario"]
     starting_captain = starting_captains[world.options.starting_captain]
     items_to_create.remove(starting_captain)
+    items_to_create.remove("Out-of-logic")
     world.push_precollected(create_item(world, starting_captain))
     items_to_create += ["5 coins"] * 5
     items_to_create += ["10 coins"] * 8
