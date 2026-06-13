@@ -252,7 +252,7 @@ def create_locations(world: MarioSuperSluggersWorld) -> None:
     dk_pipe = world.get_region("DK Jungle past pipe")
     dk_shop = world.get_region("Funky Kong's shop")
     wario = world.get_region("Wario City")
-    wario_vines = world.get_region("Wario City past vines")
+    wario_dynamo = world.get_region("Wario City after dynamo")
     wario_containers = world.get_region("Wario City past containers")
     wario_shop = world.get_region("Goomba's shop")
     yoshi = world.get_region("Yoshi Park")
@@ -401,25 +401,25 @@ def create_locations(world: MarioSuperSluggersWorld) -> None:
     ]), MarioSuperSluggersLocation)
     
     wario.add_locations(get_location_names_with_ids([
+        "Wario City: Recruit Wario",
         "Wario City: Recruit Paratroopa",
         "Wario City: Recruit Goomba",
         "Wario City: Recruit Paragoomba",
         "Wario City: Recruit Green Paratroopa",
         "Wario City: Central tree",
         "Wario City: Right tree after Paragoomba",
-        "Wario City: Trash can near entrance",
-        "Wario City: Trash can near dynamo",
         "Wario City: Top tree",
     ]), MarioSuperSluggersLocation)
     
-    wario_vines.add_locations(get_location_names_with_ids([
-        "Wario City: Recruit Wario",
+    wario_dynamo.add_locations(get_location_names_with_ids([
         "Wario City: Recruit Koopa",
         "Wario City: Recruit King Boo",
         "Wario City: Recruit Red Koopa",
+        "Wario City: Trash can near entrance",
+        "Wario City: Trash can near dynamo",
     ]), MarioSuperSluggersLocation)
     
-    wario_vines.add_event(
+    wario_dynamo.add_event(
         "Wario City: Play Gem Catch", "Play Gem Catch", location_type=MarioSuperSluggersLocation,
         item_type=items.MarioSuperSluggersItem
     )

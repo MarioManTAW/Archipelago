@@ -2,8 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from BaseClasses import CollectionState
-from worlds.generic.Rules import set_rule
+from rule_builder.rules import And, Has, HasAll, HasAny, HasGroupUnique, Rule
 from .items import MINIGAMES
 
 if TYPE_CHECKING:
@@ -16,177 +15,111 @@ def set_all_rules(world: MarioSuperSluggersWorld) -> None:
 
 
 def set_location_rules(world: MarioSuperSluggersWorld) -> None:
-    def has_mario(state: CollectionState) -> bool:
-        return state.has("Mario", world.player)
-    def has_dk(state: CollectionState) -> bool:
-        return state.has("Donkey Kong", world.player)
-    def has_peach(state: CollectionState) -> bool:
-        return state.has("Peach", world.player)
-    def has_yoshi(state: CollectionState) -> bool:
-        return state.has("Yoshi", world.player)
-    def has_wario(state: CollectionState) -> bool:
-        return state.has("Wario", world.player)
-    
-    set_rule(world.get_location("Peach Ice Garden: Recruit Daisy"),
-             lambda state: state.has("Toad Statue", world.player))
-    set_rule(world.get_location("Wario City: Recruit Waluigi"), has_yoshi)
-    set_rule(world.get_location("Wario City: Recruit Koopa"), has_peach)
-    set_rule(world.get_location("Mario Stadium: Recruit Monty Mole"), has_peach)
-    set_rule(world.get_location("Mario Stadium: Recruit Blue Pianta"),
-             lambda state: state.has("Sea Hut Key", world.player))
-    set_rule(world.get_location("Mario Stadium: Recruit Red Pianta"), has_yoshi)
-    set_rule(world.get_location("Mario Stadium: Recruit Yellow Pianta"), has_dk)
-    set_rule(world.get_location("Mario Stadium: Recruit Green Noki"),
-             lambda state: state.has("Blue Noki", world.player))
-    set_rule(world.get_location("Peach Ice Garden: Recruit Yellow Toad"), has_peach)
-    set_rule(world.get_location("Wario City: Recruit King Boo"),
-             lambda state: state.has_all(("Boo", "Mini Boo"), world.player))
-    set_rule(world.get_location("Peach Ice Garden: Recruit Petey Piranha"), has_peach)
-    set_rule(world.get_location("Wario City: Recruit Paragoomba"), has_yoshi)
-    set_rule(world.get_location("Wario City: Recruit Green Paratroopa"),
-             lambda state: state.has("Brush", world.player))
-    set_rule(world.get_location("Yoshi Park: Recruit Green Shy Guy"), has_peach)
-    set_rule(world.get_location("Yoshi Park: Recruit Gray Shy Guy"), has_peach)
-    set_rule(world.get_location("Mario Stadium: Recruit Blooper"), has_peach)
-    set_rule(world.get_location("Peach Ice Garden: Recruit Baby Daisy"),
-             lambda state: state.has("Baby Daisy's Rattle", world.player))
-    set_rule(world.get_location("DK Jungle: Recruit Baby DK"), has_yoshi)
-    set_rule(world.get_location("Yoshi Park: Recruit Red Yoshi"),
-             lambda state: state.has("Brush", world.player))
-    set_rule(world.get_location("Mario Stadium: Chest"),
-             lambda state: state.has_all(("Mario", "Wario"), world.player))
-    set_rule(world.get_location("Peach Ice Garden: Chest"),
-             lambda state: state.has_all(("Wario", "Baby Daisy's Rattle"), world.player))
-    set_rule(world.get_location("DK Jungle: Chest"), has_wario)
-    set_rule(world.get_location("Yoshi Park: Chest"), has_wario)
-    set_rule(world.get_location("Wario City: Chest"), has_yoshi)
-    set_rule(world.get_location("Mario Stadium: Bottom barrel"), has_dk)
-    set_rule(world.get_location("Mario Stadium: Middle barrel after Yellow Pianta"), has_dk)
-    set_rule(world.get_location("Mario Stadium: Top barrel"), has_dk)
-    set_rule(world.get_location("Mario Stadium: Bottom bush"), has_mario)
-    set_rule(world.get_location("Mario Stadium: Top bush"), has_mario)
-    set_rule(world.get_location("Mario Stadium: Central tree after Red Pianta"), has_yoshi)
-    set_rule(world.get_location("Mario Stadium: Top tree"), has_yoshi)
-    set_rule(world.get_location("Peach Ice Garden: Right mushroom after Yellow Toad"), has_peach)
-    set_rule(world.get_location("Peach Ice Garden: Top mushroom"), has_peach)
-    set_rule(world.get_location("Wario City: Central tree"), has_yoshi)
-    set_rule(world.get_location("Wario City: Right tree after Paragoomba"), has_yoshi)
-    set_rule(world.get_location("Wario City: Trash can near entrance"), has_wario)
-    set_rule(world.get_location("Wario City: Trash can near dynamo"), has_wario)
-    set_rule(world.get_location("Wario City: Top tree"), has_yoshi)
-    set_rule(world.get_location("DK Jungle: Top flowers near entrance"), has_mario)
-    set_rule(world.get_location("DK Jungle: Tree near shop"), has_yoshi)
-    set_rule(world.get_location("DK Jungle: Tree near Dixie Kong"), has_yoshi)
-    set_rule(world.get_location("DK Jungle: Tree below entrance after Baby DK"), has_yoshi)
-    set_rule(world.get_location("DK Jungle: Bottom flowers near entrance"), has_mario)
-    set_rule(world.get_location("DK Jungle: Flowers near bridge"), has_mario)
-    set_rule(world.get_location("DK Jungle: Flowers below central tree"), has_mario)
-    set_rule(world.get_location("DK Jungle: Flowers near Funky Kong"), has_mario)
-    set_rule(world.get_location("DK Jungle: Flowers below entrance"), has_mario)
-    set_rule(world.get_location("Yoshi Park: Left stump after Shy Guys"), has_peach)
-    set_rule(world.get_location("Yoshi Park: Right stump after Shy Guys"), has_peach)
-    set_rule(world.get_location("Peach Ice Garden: Baby Daisy's Rattle"), has_wario)
-    set_rule(world.get_location("Blue Pianta's shop: Buy Luigi's Flashlight"),
-             lambda state: state.has("Luigi", world.player))
-    set_rule(world.get_location("Toadsworth's shop: Buy Cruiser Pass"),
-             lambda state: state.has("Daisy", world.player))
-    set_rule(world.get_location("Mario Stadium: Play Bob-omb Derby"),
-             lambda state: state.has("Day-night cycle", world.player))
-    set_rule(world.get_location("Peach Ice Garden: Play Wall Ball"),
-             lambda state: state.has("Day-night cycle", world.player))
+    def set_rule(location: str, rule: Rule):
+        world.set_rule(world.get_location(location), rule)
+    set_rule("Peach Ice Garden: Recruit Daisy", Has("Toad Statue"))
+    set_rule("Wario City: Recruit Wario", Has("Donkey Kong"))
+    set_rule("Wario City: Recruit Waluigi", Has("Yoshi"))
+    set_rule("Wario City: Recruit Koopa", Has("Peach"))
+    set_rule("Mario Stadium: Recruit Monty Mole", Has("Peach"))
+    set_rule("Mario Stadium: Recruit Blue Pianta", Has("Sea Hut Key"))
+    set_rule("Mario Stadium: Recruit Red Pianta", Has("Yoshi"))
+    set_rule("Mario Stadium: Recruit Yellow Pianta", Has("Donkey Kong"))
+    set_rule("Mario Stadium: Recruit Green Noki", Has("Blue Noki"))
+    set_rule("Peach Ice Garden: Recruit Yellow Toad", Has("Peach"))
+    set_rule("Wario City: Recruit King Boo", HasAll("Boo", "Mini Boo"))
+    set_rule("Peach Ice Garden: Recruit Petey Piranha", Has("Peach"))
+    set_rule("Wario City: Recruit Paragoomba", Has("Yoshi"))
+    set_rule("Wario City: Recruit Green Paratroopa", Has("Brush"))
+    set_rule("Yoshi Park: Recruit Green Shy Guy", Has("Peach"))
+    set_rule("Yoshi Park: Recruit Gray Shy Guy", Has("Peach"))
+    set_rule("Mario Stadium: Recruit Blooper", Has("Peach"))
+    set_rule("Peach Ice Garden: Recruit Baby Daisy", Has("Baby Daisy's Rattle"))
+    set_rule("DK Jungle: Recruit Baby DK", Has("Yoshi"))
+    set_rule("Yoshi Park: Recruit Red Yoshi", Has("Brush"))
+    set_rule("Mario Stadium: Chest", HasAll("Mario", "Wario"))
+    set_rule("Peach Ice Garden: Chest", HasAll("Wario", "Baby Daisy's Rattle"))
+    set_rule("DK Jungle: Chest", Has("Wario"))
+    set_rule("Yoshi Park: Chest", Has("Wario"))
+    set_rule("Wario City: Chest", Has("Yoshi"))
+    set_rule("Mario Stadium: Bottom barrel", Has("Donkey Kong"))
+    set_rule("Mario Stadium: Middle barrel after Yellow Pianta", Has("Donkey Kong"))
+    set_rule("Mario Stadium: Top barrel", Has("Donkey Kong"))
+    set_rule("Mario Stadium: Bottom bush", Has("Mario"))
+    set_rule("Mario Stadium: Top bush", Has("Mario"))
+    set_rule("Mario Stadium: Central tree after Red Pianta", Has("Yoshi"))
+    set_rule("Mario Stadium: Top tree", Has("Yoshi"))
+    set_rule("Peach Ice Garden: Right mushroom after Yellow Toad", Has("Peach"))
+    set_rule("Peach Ice Garden: Top mushroom", Has("Peach"))
+    set_rule("Wario City: Central tree", Has("Yoshi"))
+    set_rule("Wario City: Right tree after Paragoomba", Has("Yoshi"))
+    set_rule("Wario City: Top tree", Has("Yoshi"))
+    set_rule("DK Jungle: Top flowers near entrance", Has("Mario"))
+    set_rule("DK Jungle: Tree near shop", Has("Yoshi"))
+    set_rule("DK Jungle: Tree near Dixie Kong", Has("Yoshi"))
+    set_rule("DK Jungle: Tree below entrance after Baby DK", Has("Yoshi"))
+    set_rule("DK Jungle: Bottom flowers near entrance", Has("Mario"))
+    set_rule("DK Jungle: Flowers near bridge", Has("Mario"))
+    set_rule("DK Jungle: Flowers below central tree", Has("Mario"))
+    set_rule("DK Jungle: Flowers near Funky Kong", Has("Mario"))
+    set_rule("DK Jungle: Flowers below entrance", Has("Mario"))
+    set_rule("Yoshi Park: Left stump after Shy Guys", Has("Peach"))
+    set_rule("Yoshi Park: Right stump after Shy Guys", Has("Peach"))
+    set_rule("Peach Ice Garden: Baby Daisy's Rattle", Has("Wario"))
+    set_rule("Blue Pianta's shop: Buy Luigi's Flashlight", Has("Luigi"))
+    set_rule("Toadsworth's shop: Buy Cruiser Pass", Has("Daisy"))
+    set_rule("Mario Stadium: Play Bob-omb Derby", Has("Day-night cycle"))
+    set_rule("Peach Ice Garden: Play Wall Ball", Has("Day-night cycle"))
     if world.options.randomize_stars or world.options.goal_condition == world.options.goal_condition.option_star_badge:
-        set_rule(world.get_location("Bowser Castle: Unlock star for Mario"),
-                lambda state: state.has("Mario", world.player))
-        set_rule(world.get_location("Bowser Castle: Unlock star for Luigi"),
-                lambda state: state.has("Luigi", world.player))
-        set_rule(world.get_location("Bowser Castle: Unlock star for Donkey Kong"),
-                lambda state: state.has("Donkey Kong", world.player))
-        set_rule(world.get_location("Bowser Castle: Unlock star for Diddy Kong"),
-                lambda state: state.has("Diddy Kong", world.player))
-        set_rule(world.get_location("Bowser Castle: Unlock star for Peach"),
-                lambda state: state.has("Peach", world.player))
-        set_rule(world.get_location("Bowser Castle: Unlock star for Daisy"),
-                lambda state: state.has("Daisy", world.player))
-        set_rule(world.get_location("Bowser Castle: Unlock star for Yoshi"),
-                lambda state: state.has_any([
-                    "Yoshi", "Red Yoshi", "Blue Yoshi", "Yellow Yoshi", "Light Blue Yoshi", "Pink Yoshi"
-                ], world.player))
-        set_rule(world.get_location("Bowser Castle: Unlock star for Baby Mario"),
-                lambda state: state.has("Baby Mario", world.player))
-        set_rule(world.get_location("Bowser Castle: Unlock star for Baby Luigi"),
-                lambda state: state.has("Baby Luigi", world.player))
-        set_rule(world.get_location("Bowser Castle: Unlock star for Wario"),
-                lambda state: state.has("Wario", world.player))
-        set_rule(world.get_location("Bowser Castle: Unlock star for Waluigi"),
-                lambda state: state.has("Waluigi", world.player))
-        set_rule(world.get_location("Bowser Castle: Unlock star for Koopa"),
-                lambda state: state.has_any(["Koopa", "Red Koopa"], world.player))
-        set_rule(world.get_location("Bowser Castle: Unlock star for Toad"),
-                lambda state: state.has_any([
-                    "Red Toad", "Blue Toad", "Yellow Toad", "Green Toad", "Purple Toad"
-                ], world.player))
-        set_rule(world.get_location("Bowser Castle: Unlock star for Boo"),
-                lambda state: state.has("Boo", world.player))
-        set_rule(world.get_location("Bowser Castle: Unlock star for Toadette"),
-                lambda state: state.has("Toadette", world.player))
-        set_rule(world.get_location("Bowser Castle: Unlock star for Shy Guy"),
-                lambda state: state.has_any([
-                    "Shy Guy", "Blue Shy Guy", "Yellow Shy Guy", "Green Shy Guy", "Gray Shy Guy"
-                ], world.player))
-        set_rule(world.get_location("Bowser Castle: Unlock star for Birdo"),
-                lambda state: state.has("Birdo", world.player))
-        set_rule(world.get_location("Bowser Castle: Unlock star for Monty Mole"),
-                lambda state: state.has("Monty Mole", world.player))
-        set_rule(world.get_location("Bowser Castle: Unlock star for Paratroopa"),
-                lambda state: state.has_any(["Paratroopa", "Green Paratroopa"], world.player))
-        set_rule(world.get_location("Bowser Castle: Unlock star for Pianta"),
-                lambda state: state.has_any(["Blue Pianta", "Red Pianta", "Yellow Pianta"], world.player))
-        set_rule(world.get_location("Bowser Castle: Unlock star for Noki"),
-                lambda state: state.has_any(["Blue Noki", "Red Noki", "Green Noki"], world.player))
-        set_rule(world.get_location("Bowser Castle: Unlock star for Toadsworth"),
-                lambda state: state.has("Toadsworth", world.player))
-        set_rule(world.get_location("Bowser Castle: Unlock star for King Boo"),
-                lambda state: state.has("King Boo", world.player))
-        set_rule(world.get_location("Bowser Castle: Unlock star for Petey Piranha"),
-                lambda state: state.has("Petey Piranha", world.player))
-        set_rule(world.get_location("Bowser Castle: Unlock star for Dixie Kong"),
-                lambda state: state.has("Dixie Kong", world.player))
-        set_rule(world.get_location("Bowser Castle: Unlock star for Goomba"),
-                lambda state: state.has("Goomba", world.player))
-        set_rule(world.get_location("Bowser Castle: Unlock star for Paragoomba"),
-                lambda state: state.has("Paragoomba", world.player))
-        set_rule(world.get_location("Bowser Castle: Unlock star for Wiggler"),
-                lambda state: state.has("Wiggler", world.player))
-        set_rule(world.get_location("Bowser Castle: Unlock star for Blooper"),
-                lambda state: state.has("Blooper", world.player))
-        set_rule(world.get_location("Bowser Castle: Unlock star for Funky Kong"),
-                lambda state: state.has("Funky Kong", world.player))
-        set_rule(world.get_location("Bowser Castle: Unlock star for Tiny Kong"),
-                lambda state: state.has("Tiny Kong", world.player))
-        set_rule(world.get_location("Bowser Castle: Unlock star for Kritter"),
-                lambda state: state.has_any(["Kritter", "Blue Kritter", "Red Kritter", "Brown Kritter"], world.player))
-        set_rule(world.get_location("Bowser Castle: Unlock star for King K. Rool"),
-                lambda state: state.has("King K. Rool", world.player))
-        set_rule(world.get_location("Bowser Castle: Unlock star for Baby Peach"),
-                lambda state: state.has("Baby Peach", world.player))
-        set_rule(world.get_location("Bowser Castle: Unlock star for Baby Daisy"),
-                lambda state: state.has("Baby Daisy", world.player))
-        set_rule(world.get_location("Bowser Castle: Unlock star for Baby DK"),
-                lambda state: state.has("Baby DK", world.player))
-        set_rule(world.get_location("Baseball Kingdom: Star all characters"),
-                lambda state: state.count_group_unique("Stars", world.player) >= 41 and\
-                    state.has("Defeat Bowser Monsters", world.player))
-    set_rule(world.get_location("Baseball Kingdom: Play all minigames"),
-             lambda state: state.has_all(MINIGAMES, world.player))
-    set_rule(world.get_location("Baseball Kingdom: Recruit all characters"),
-             lambda state: state.has_all(["Mario", "Donkey Kong", "Peach", "Yoshi", "Wario",
-                                          "Blue Noki", "Green Noki", "Boo", "Mini Boo", "Defeat Bowser Monsters",
-                                          "Sea Hut Key", "Baby Daisy's Rattle", "Toad Statue", "Daisy Statue",
-                                          "Stone tablet piece A", "Stone tablet piece B", "Stone tablet piece C",
-                                          "Brush"], world.player))
+        set_rule("Bowser Castle: Unlock star for Mario", Has("Mario"))
+        set_rule("Bowser Castle: Unlock star for Luigi", Has("Luigi"))
+        set_rule("Bowser Castle: Unlock star for Donkey Kong", Has("Donkey Kong"))
+        set_rule("Bowser Castle: Unlock star for Diddy Kong", Has("Diddy Kong"))
+        set_rule("Bowser Castle: Unlock star for Peach", Has("Peach"))
+        set_rule("Bowser Castle: Unlock star for Daisy", Has("Daisy"))
+        set_rule("Bowser Castle: Unlock star for Yoshi",
+                HasAny("Yoshi", "Red Yoshi", "Blue Yoshi", "Yellow Yoshi", "Light Blue Yoshi", "Pink Yoshi"))
+        set_rule("Bowser Castle: Unlock star for Baby Mario", Has("Baby Mario"))
+        set_rule("Bowser Castle: Unlock star for Baby Luigi", Has("Baby Luigi"))
+        set_rule("Bowser Castle: Unlock star for Wario", Has("Wario"))
+        set_rule("Bowser Castle: Unlock star for Waluigi", Has("Waluigi"))
+        set_rule("Bowser Castle: Unlock star for Koopa", HasAny("Koopa", "Red Koopa"))
+        set_rule("Bowser Castle: Unlock star for Toad",
+                HasAny("Red Toad", "Blue Toad", "Yellow Toad", "Green Toad", "Purple Toad"))
+        set_rule("Bowser Castle: Unlock star for Boo", Has("Boo"))
+        set_rule("Bowser Castle: Unlock star for Toadette", Has("Toadette"))
+        set_rule("Bowser Castle: Unlock star for Shy Guy",
+                HasAny("Shy Guy", "Blue Shy Guy", "Yellow Shy Guy", "Green Shy Guy", "Gray Shy Guy"))
+        set_rule("Bowser Castle: Unlock star for Birdo", Has("Birdo"))
+        set_rule("Bowser Castle: Unlock star for Monty Mole", Has("Monty Mole"))
+        set_rule("Bowser Castle: Unlock star for Paratroopa", HasAny("Paratroopa", "Green Paratroopa"))
+        set_rule("Bowser Castle: Unlock star for Pianta", HasAny("Blue Pianta", "Red Pianta", "Yellow Pianta"))
+        set_rule("Bowser Castle: Unlock star for Noki", HasAny("Blue Noki", "Red Noki", "Green Noki"))
+        set_rule("Bowser Castle: Unlock star for Toadsworth", Has("Toadsworth"))
+        set_rule("Bowser Castle: Unlock star for King Boo", Has("King Boo"))
+        set_rule("Bowser Castle: Unlock star for Petey Piranha", Has("Petey Piranha"))
+        set_rule("Bowser Castle: Unlock star for Dixie Kong", Has("Dixie Kong"))
+        set_rule("Bowser Castle: Unlock star for Goomba", Has("Goomba"))
+        set_rule("Bowser Castle: Unlock star for Paragoomba", Has("Paragoomba"))
+        set_rule("Bowser Castle: Unlock star for Wiggler", Has("Wiggler"))
+        set_rule("Bowser Castle: Unlock star for Blooper", Has("Blooper"))
+        set_rule("Bowser Castle: Unlock star for Funky Kong", Has("Funky Kong"))
+        set_rule("Bowser Castle: Unlock star for Tiny Kong", Has("Tiny Kong"))
+        set_rule("Bowser Castle: Unlock star for Kritter",
+                HasAny("Kritter", "Blue Kritter", "Red Kritter", "Brown Kritter"))
+        set_rule("Bowser Castle: Unlock star for King K. Rool", Has("King K. Rool"))
+        set_rule("Bowser Castle: Unlock star for Baby Peach", Has("Baby Peach"))
+        set_rule("Bowser Castle: Unlock star for Baby Daisy", Has("Baby Daisy"))
+        set_rule("Bowser Castle: Unlock star for Baby DK", Has("Baby DK"))
+        set_rule("Baseball Kingdom: Star all characters",
+                 And(HasGroupUnique("Stars", 41), Has("Defeat Bowser Monsters")))
+    set_rule("Baseball Kingdom: Play all minigames", HasAll(*MINIGAMES))
+    set_rule("Baseball Kingdom: Recruit all characters",
+             HasAll("Mario", "Donkey Kong", "Peach", "Yoshi", "Wario", "Blue Noki", "Green Noki", "Boo", "Mini Boo",
+                     "Defeat Bowser Monsters", "Sea Hut Key", "Baby Daisy's Rattle", "Toad Statue", "Daisy Statue",
+                     "Stone tablet piece A", "Stone tablet piece B", "Stone tablet piece C", "Brush"))
 
 
 def set_completion_condition(world: MarioSuperSluggersWorld) -> None:
     goal_events = ["Defeat Bowser Monsters", "Play Badge", "Friend Badge", "Star Badge"]
-    world.multiworld.completion_condition[world.player] = lambda state:\
-        state.has(goal_events[world.options.goal_condition], world.player)
+    world.set_completion_rule(Has(goal_events[world.options.goal_condition]))

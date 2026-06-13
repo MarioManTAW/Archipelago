@@ -3,7 +3,8 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from BaseClasses import Region
-from .items import MINIGAMES
+from rule_builder.rules import And, Has, HasAll, HasAny, HasGroupUnique
+from .items import MINIGAMES_OR_OOL
 
 if TYPE_CHECKING:
     from . import MarioSuperSluggersWorld
@@ -32,7 +33,7 @@ def create_all_regions(world: MarioSuperSluggersWorld) -> None:
         Region("DK Jungle past pipe", world.player, world.multiworld),
         Region("Funky Kong's shop", world.player, world.multiworld),
         Region("Wario City", world.player, world.multiworld),
-        Region("Wario City past vines", world.player, world.multiworld),
+        Region("Wario City after dynamo", world.player, world.multiworld),
         Region("Wario City past containers", world.player, world.multiworld),
         Region("Goomba's shop", world.player, world.multiworld),
         Region("Yoshi Park", world.player, world.multiworld),
@@ -66,7 +67,7 @@ def connect_regions(world: MarioSuperSluggersWorld) -> None:
     dk_pipe = world.get_region("DK Jungle past pipe")
     dk_shop = world.get_region("Funky Kong's shop")
     wario = world.get_region("Wario City")
-    wario_vines = world.get_region("Wario City past vines")
+    wario_dynamo = world.get_region("Wario City after dynamo")
     wario_containers = world.get_region("Wario City past containers")
     wario_shop = world.get_region("Goomba's shop")
     yoshi = world.get_region("Yoshi Park")
@@ -82,37 +83,32 @@ def connect_regions(world: MarioSuperSluggersWorld) -> None:
     bowser = world.get_region("Bowser Castle")
 
     overworld.connect(mario)
-    mario.connect(mario_bridge, None, lambda state: state.has_all(("Blue Noki", "Green Noki"), world.player))
-    mario.connect(mario_shop, None, lambda state:
-                  state.has("Sea Hut Key", world.player) and state.has_any(MINIGAMES, world.player))
+    mario.connect(mario_bridge, None, HasAll("Blue Noki", "Green Noki"))
+    mario.connect(mario_shop, None, And(Has("Sea Hut Key"), HasAny(*MINIGAMES_OR_OOL)))
     mario_shop.connect(luigi_flashlight)
     overworld.connect(peach)
-    peach.connect(peach_flood, None, lambda state: state.has("Daisy Statue", world.player))
-    peach.connect(peach_bushes, None, lambda state: state.has("Mario", world.player))
-    peach.connect(peach_topiaries, None, lambda state: state.has("Peach", world.player))
-    peach_flood.connect(peach_manhole, None, lambda state: state.has("Yoshi", world.player))
-    peach_flood.connect(peach_shop, None, lambda state: state.has_any(MINIGAMES, world.player))
+    peach.connect(peach_flood, None, Has("Daisy Statue"))
+    peach.connect(peach_bushes, None, Has("Mario"))
+    peach.connect(peach_topiaries, None, Has("Peach"))
+    peach_flood.connect(peach_manhole, None, Has("Yoshi"))
+    peach_flood.connect(peach_shop, None, HasAny(*MINIGAMES_OR_OOL))
     overworld.connect(dk)
-    dk.connect(dk_vines, None, lambda state: state.has("Donkey Kong", world.player))
-    dk_vines.connect(dk_tablet, None, lambda state: state.count_group_unique("Stone tablet", world.player) == 3)
-    dk_vines.connect(dk_shop, None, lambda state: state.has_any(MINIGAMES, world.player))
-    dk_tablet.connect(dk_pipe, None, lambda state: state.has("Mario", world.player))
+    dk.connect(dk_vines, None, Has("Donkey Kong"))
+    dk_vines.connect(dk_tablet, None, HasGroupUnique("Stone tablet", 3))
+    dk_vines.connect(dk_shop, None, HasAny(*MINIGAMES_OR_OOL))
+    dk_tablet.connect(dk_pipe, None, Has("Mario"))
     overworld.connect(wario)
-    wario.connect(wario_vines, None, lambda state: state.has("Donkey Kong", world.player))
-    wario.connect(wario_shop, None, lambda state: state.has_any(MINIGAMES, world.player))
-    wario_vines.connect(wario_containers, None, lambda state: state.has("Wario", world.player))
+    wario.connect(wario_dynamo, None, Has("Wario"))
+    wario.connect(wario_shop, None, HasAny(*MINIGAMES_OR_OOL))
+    wario_dynamo.connect(wario_containers, None, Has("Donkey Kong"))
     overworld.connect(yoshi)
-    yoshi.connect(yoshi_pipe, None, lambda state: state.has("Mario", world.player))
-    yoshi_pipe.connect(yoshi_manhole, None, lambda state: state.has("Yoshi", world.player))
-    yoshi_pipe.connect(yoshi_shop, None, lambda state:
-                       state.has("Brush", world.player) and state.has_any(MINIGAMES, world.player))
-    overworld.connect(daisy, None, lambda state: state.has("Cruiser Pass", world.player))
-    daisy.connect(daisy_shop, None, lambda state: state.has("Day-night cycle", world.player) and \
-                  state.has("Special Shop Pass", world.player) and state.has_any(MINIGAMES, world.player))
+    yoshi.connect(yoshi_pipe, None, Has("Mario"))
+    yoshi_pipe.connect(yoshi_manhole, None, Has("Yoshi"))
+    yoshi_pipe.connect(yoshi_shop, None, And(Has("Brush"), HasAny(*MINIGAMES_OR_OOL)))
+    overworld.connect(daisy, None, Has("Cruiser Pass"))
+    daisy.connect(daisy_shop, None, And(Has("Day-night cycle"), Has("Special Shop Pass"), HasAny(*MINIGAMES_OR_OOL)))
     daisy_shop.connect(luigi_flashlight)
-    overworld.connect(luigi, None, lambda state:
-                      state.has("Luigi's Flashlight", world.player) and state.has("Day-night cycle", world.player))
-    overworld.connect(toy_field, None, lambda state: state.has("Toy Field Pass", world.player))
-    overworld.connect(bowser_jr, None, lambda state:
-                      state.count_group_unique("Characters", world.player) >= world.options.goal_characters)
-    bowser_jr.connect(bowser, None, lambda state: state.has("Day-night cycle", world.player))
+    overworld.connect(luigi, None, And(Has("Luigi's Flashlight"), Has("Day-night cycle")))
+    overworld.connect(toy_field, None, Has("Toy Field Pass"))
+    overworld.connect(bowser_jr, None, HasGroupUnique("Characters", world.options.goal_characters.value))
+    bowser_jr.connect(bowser, None, Has("Day-night cycle"))
