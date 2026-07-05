@@ -265,7 +265,7 @@ MISSION_COUNTS = {
     0x16: 9,
     0x17: 9,
     0x18: 9,
-    0x19: 10,
+    0x19: 11,
     0x1A: 11,
     0x1B: 3,
     0x1C: 3,
@@ -728,7 +728,7 @@ async def check_mission_condition() -> None:
             return
     if mission in MISSION_COUNTS:
         unlocked = {
-            addr: dolphin_memory_engine.read_byte(addr) for addr in CHARACTERS if addr - CHARACTERS[0] != opponent
+            addr: dolphin_memory_engine.read_byte(addr) if addr - CHARACTERS[0] != opponent else 0 for addr in CHARACTERS
         }
         valid = len([1 for x in unlocked if unlocked[x] == 0x02]) >= MISSION_COUNTS[mission] and\
             (not mission in MISSION_CAPTAINS or len([1 for x in CAPTAINS if unlocked[x] == 0x02]) >= 2)
