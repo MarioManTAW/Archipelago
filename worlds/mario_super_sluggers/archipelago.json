@@ -1,6 +1,6 @@
 {
     "game": "Mario Super Sluggers",
     "authors": ["MarioManTAW"],
-    "world_version": "0.3.1",
+    "world_version": "0.4.0",
     "minimum_ap_version": "0.6.7"
 }
