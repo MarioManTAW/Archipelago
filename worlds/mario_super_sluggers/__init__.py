@@ -1,9 +1,12 @@
+import json
+import os
 from typing import Any
 from BaseClasses import Tutorial
 from Utils import tuplize_version
 from worlds.AutoWorld import World, WebWorld
 from worlds.LauncherComponents import Component, Type, components, launch_subprocess
 from . import items, locations, options, regions, rules
+from .patch import MarioSuperSluggersPatch
 
 def run_client() -> None:
     """
@@ -81,6 +84,79 @@ class MarioSuperSluggersWorld(World):
             self.options.goal_characters.value = slot_data["goal_characters"]
             self.options.randomize_stars.value = slot_data["randomize_stars"]
             self.options.randomize_shops.value = slot_data["randomize_shops"]
+
+    def generate_output(self, output_directory: str) -> None:
+        patch = MarioSuperSluggersPatch(player=self.player, player_name=self.player_name)
+        patchable_locations = [
+            0x80E553F201,
+            0x80E553F301,
+            0x80E554BF01,
+            0x80E554C001,
+            0x80E554C101,
+            0x80E554C201,
+            0x80E554C301,
+            0x80E554C401,
+            0x80E554C501,
+            0x80E554C601,
+            0x80E554CF01,
+            0x80E554D001,
+            0x80E554D101,
+            0x80E554D201,
+            0x80E554D301,
+            0x80E554D401,
+            0x80E554D501,
+            0x80E554D601,
+            0x80E554DF01,
+            0x80E554E001,
+            0x80E554E101,
+            0x80E554E201,
+            0x80E554E301,
+            0x80E554E401,
+            0x80E554E501,
+            0x80E554E601,
+            0x80E554EF01,
+            0x80E554F001,
+            0x80E554F101,
+            0x80E554F201,
+            0x80E554F301,
+            0x80E554F401,
+            0x80E554F501,
+            0x80E554F601,
+            0x80E554FF01,
+            0x80E5550001,
+            0x80E5550101,
+            0x80E5550201,
+            0x80E5550301,
+            0x80E5550401,
+            0x80E5550501,
+            0x80E5550601,
+            0x80E5550F01,
+            0x80E5551001,
+            0x80E5551101,
+            0x80E5551201,
+            0x80E5551301,
+            0x80E5551401,
+            0x80E5551501,
+            0x80E5551601,
+            0x80E5551701,
+            0x80E5551801,
+            0x80E5551901,
+        ]
+        patch.data = json.dumps({
+            "goal_characters": self.options.goal_characters.value,
+            "locations": [
+                {
+                    "id": location.address,
+                    "player": self.multiworld.player_name[location.item.player],
+                    "item": location.item.name,
+                    "flags": location.item.flags
+                }
+                for location in self.multiworld.get_locations(self.player)
+                if location.address in patchable_locations and location.item
+            ]
+        })
+        out_file_name = self.multiworld.get_out_file_name_base(self.player)
+        patch.write(os.path.join(output_directory, f"{out_file_name}{patch.patch_file_ending}"))
 
     def fill_slot_data(self) -> dict[str, Any]:
         starting_captains = [0, 4, 6, 2, 10]
