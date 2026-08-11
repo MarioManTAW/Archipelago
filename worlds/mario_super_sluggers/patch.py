@@ -11,7 +11,7 @@ class MarioSuperSluggersPatch(APPatch):
 
     def get_manifest(self) -> Dict[str, Any]:
         manifest = super().get_manifest()
-        manifest["patch_version"] = 0
+        manifest["patch_version"] = 1
         return manifest
     
     def write_contents(self, opened_zipfile: ZipFile) -> None:

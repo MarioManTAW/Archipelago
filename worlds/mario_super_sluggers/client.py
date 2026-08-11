@@ -21,7 +21,7 @@ if TYPE_CHECKING:
     import kvui
 
 CONNECTION_REFUSED_GAME_STATUS = (
-    "Dolphin failed to connect. Please load a ROM for Mario Super Sluggers. Trying again in 5 seconds..."
+    "Dolphin failed to connect. Please load a patched ROM for Mario Super Sluggers. Trying again in 5 seconds..."
 )
 CONNECTION_REFUSED_SAVE_STATUS = (
     "Dolphin failed to connect. Please load into the save file. Trying again in 5 seconds..."
@@ -32,7 +32,8 @@ CONNECTION_LOST_STATUS = (
 CONNECTION_CONNECTED_STATUS = "Dolphin connected successfully."
 CONNECTION_INITIAL_STATUS = "Dolphin connection has not been initiated."
 
-WORLD_VERSION = Utils.tuplize_version("0.4.0")
+WORLD_VERSION = Utils.tuplize_version("1.0.0")
+WORLD_BACKCOMPAT_MIN_VERSION = Utils.tuplize_version("1.0.0")
 
 # The expected index for the following item that should be received.
 EXPECTED_INDEX_ADDR = 0x80E55000
@@ -43,8 +44,6 @@ COIN_COUNT = 0x80E55C0A
 ITEM_COUNTS = [0x80E55DAC, 0x80E55DAD, 0x80E55DAE, 0x80E55DAF, 0x80E55DB0, 0x80E55DB1, 0x80E55DB2]
 CURR_STAGE = 0x80E55D89
 CURR_MISSION = 0x80E55DBC
-REQ_CHARS = [0x80205F57, 0x801E8E2B, 0x801ABC2B, 0x801AB6E7]
-CURR_CAPTAIN = 0x80E55C2B
 TEAM_BASE = 0x80E55C10
 DAY_NIGHT = 0x80E55AE0
 IS_NIGHT = 0x80E55DC1
@@ -311,113 +310,15 @@ MISSION_CHARS = {
     0x35: [0x80E552EA, 0x80E552F1, 0x80E552FD, 0x80E55312, 0x80E55314],
 }
 
-MOVED_FLAGS = [
-    0x8006BABA, 0x801945B6, 0x80194626, 0x8019466A, 0x801946DA, 0x801960AA, 0x8019619E, 0x801962AA, 0x801964E2,
-    0x80196C62, 0x80196CAE, 0x801BE38E, 0x801C35D2, 0x801C360E, 0x801C367E, 0x801C3C9E, 0x801C3F22, 0x801C4196,
-    0x801C41B6, 0x801C41D6, 0x801C41F6, 0x801C4216, 0x801C4236, 0x801C4256, 0x801C4772, 0x801C4EDA, 0x801C522E,
-    0x801C69D6, 0x801C6B6E, 0x801C6E86, 0x801C8042, 0x801C8152, 0x801C8322, 0x801D8606, 0x801D8632, 0x801D9526,
-    0x801D954A, 0x801D956E, 0x801D9592, 0x801D95B6, 0x801D95DA, 0x801D95FE, 0x801E304E, 0x801E34A2, 0x801E824E,
-    0x801E8272, 0x801E8DF6, 0x801EBCFE, 0x801EBD1A, 0x801EEBB6, 0x801EEBD6, 0x801EEBFA, 0x801EEC1E, 0x801EEC42,
-    0x801EEECA, 0x801F4BC6, 0x801F524E, 0x801F5A0A, 0x801F5C0E, 0x801F5D62, 0x801F62D6, 0x801F69EE, 0x801F6EC6,
-    0x801F768E, 0x802024AA, 0x80202522, 0x8020253A, 0x802025B2, 0x802025BE, 0x80202636, 0x80203382, 0x80204FFA,
-    0x80207B8E, 0x80207BBA, 0x80207BE2, 0x80207C0E, 0x80207C36, 0x80207C62, 0x8020BCBA, 0x8020BCC6, 0x8020BF36,
-    0x8020C43A, 0x8020EEAE, 0x8020F482, 0x80231906, 0x80231A86, 0x80231CEA, 0x8023405A
-]
-
-ZERO_SHORTS = [
-    0x80657A3C, 0x80657A3E, 0x80657A40, 0x80657A42, 0x80657A44, 0x80657A46, 0x80657A48, 0x80657A4A, 0x80657A4C,
-    0x80657A4E, 0x80657A50, 0x80657A52, 0x80657A54, 0x80657A56, 0x80657A70, 0x80657A72, 0x80657A74, 0x80657A76,
-    0x80657A78, 0x80657A7A, 0x80657A7C, 0x80657A7E, 0x80657A80, 0x80657A82, 0x80657A84, 0x80657A86, 0x80657A88,
-    0x80657A8A, 0x80657A8C, 0x80657A8E, 0x80657A90, 0x80657A7C, 0x80657AB4, 0x80657AB6, 0x80657AB8, 0x80657ABA,
-    0x80657AC0, 0x80657AC2, 0x80657AC4, 0x80657AC6, 0x80657AC8, 0x80657ACA, 0x80657AD8, 0x80657ADA, 0x80657ADC,
-    0x80657ADE, 0x80657AE0, 0x80657AE2, 0x80657AE4, 0x80657AE6, 0x80657AE8, 0x80657AEA, 0x80657AEC, 0x80657AEE,
-    0x80657AF0, 0x80657AF2, 0x80657AF4, 0x80657AF6, 0x80657AF8, 0x80657AFA, 0x80657AFC, 0x80657AFE, 0x80657B0C,
-    0x80657B0E, 0x80657B10, 0x80657B12, 0x80657B14, 0x80657B16, 0x80657B18, 0x80657B1A, 0x80657B1C, 0x80657B1E,
-    0x8078FAD8
-]
-
-NOPS = [0x801E0270, 0x801E3114, 0x801E4AF8, 0x801E4B74, 0x801E6684, 0x802390F8]
-
-BRANCH = [0x801E8E18]
+ZERO_SHORTS = [0x8078FAD8]
 
 CUSTOM_BYTES = {
     0x80E55AE9: 0x02,
     0x80E55DBA: 0x01
 }
 
-CUSTOM_WORDS = {
-    0x8020F99C: 0x8803024C,
-    0x8020EDC0: 0x388000AD,
-    0x8020EDC4: 0x8803014F,
-    0x8020EDC8: 0x2C000004,
-    0x8020EDCC: 0x40820034,
-    0x8020EDD0: 0x88030011,
-    0x8020EDD4: 0x2C000002,
-    0x8020EDD8: 0x40820028,
-    0x8020EDDC: 0x38600001,
-    0x8020EDE0: 0x987C01B5,
-    0x8020EDE4: 0x881C01EF,
-    0x8020EDE8: 0x2C000000,
-    0x8020EDEC: 0x40820008,
-    0x8020EDF0: 0x987C01EF,
-    0x8020EDF4: 0x38000001,
-    0x8020EDF8: 0x981503A0,
-    0x8020EDFC: 0x38840001,
-    0x8020EE00: 0x7F63DB78,
-    0x8020EE04: 0x38A00001,
-    0x8020EE08: 0x4BFB0489,
-    0x8020EE0C: 0x60000000,
-    0x80214890: 0x881604F2,
-    0x80214894: 0x2C000000,
-    0x80214898: 0x4082005C,
-    0x8021489C: 0x8803000B,
-    0x802148A0: 0x28000001,
-    0x802148A4: 0x40820010,
-    0x802148A8: 0x881DF81B,
-    0x802148BC: 0x2C000002,
-    0x802148B0: 0x4182005C,
-    0x8065771E: 0x001E001E
-}
-
 SHOP_WORDS = {
-    0x80231A50: 0x38E00001,
-    0x80231A64: 0x98E3F9E3,
-    0x80231A70: 0x60000000,
-    0x80231B3C: 0x8806F916,
-    0x80231B50: 0x8806F917,
-    0x80231B80: 0x8806F916,
-    0x80231B94: 0x8806F917,
-    0x80231BC4: 0x8806F916,
-    0x80231BD8: 0x8806F917,
-    0x80657708: 0x00030005,
-    0x8065770C: 0x00050005,
-    0x80657710: 0x0005000A,
-    0x80657714: 0x000A000F,
-    0x80657718: 0x000A000F,
-    0x8065771C: 0x000F001E,
     0x8078FBC0: 0x00000000,
-}
-
-MUSIC = {
-    0x06: [0x8062E60B],
-    0x07: [0x8062E613],
-    0x08: [0x8062E627],
-    0x09: [0x8062E623],
-    0x0A: [0x8062E62B],
-    0x0B: [0x8062E61B],
-    0x0C: [0x8062E61F],
-    0x0D: [0x8062E60F],
-    0x0E: [0x8062E617],
-    0x0F: [0x8062E62C],
-    0x12: [0x80204B87, 0x80204B9F, 0x80205503],
-    0x13: [0x80205557],
-    0x14: [0x8018933F, 0x80192037],
-    0x15: [0x8020ACC7, 0x8020ACAF],
-    0x16: [0x8020D92B, 0x8020D943],
-    0x17: [0x80200927, 0x8020093F],
-    0x18: [0x802129C7, 0x802129DF],
-    0x19: [0x8021866B, 0x80218683],
-    0x4B: [0x801A0A23, 0x80205583],
 }
 
 CUTSCENES = [
@@ -484,11 +385,9 @@ class MarioSuperSluggersContext(SuperContext):
         self.dolphin_sync_task: Optional[asyncio.Task[None]] = None
         self.dolphin_status: str = CONNECTION_INITIAL_STATUS
 
-        self.starting_captain: int = 0
         self.goal_condition: int = 0
         self.goal_characters: int = 72
         self.randomize_shops: int = 0
-        self.music: dict[int,int] = {}
         self.reduced_cutscenes: bool = False
         self.current_stage_name: str = "Baseball Kingdom"
         self.world_version: Utils.Version = WORLD_VERSION
@@ -503,7 +402,6 @@ class MarioSuperSluggersContext(SuperContext):
         :param allow_autoreconnect: Allow the client to auto-reconnect to the server. Defaults to `False`.
         """
         self.auth = None
-        self.starting_captain = 0
         self.goal_characters = 72
         self.world_version = WORLD_VERSION
         await super().disconnect(allow_autoreconnect)
@@ -527,23 +425,24 @@ class MarioSuperSluggersContext(SuperContext):
         :param args: The command arguments.
         """
         if cmd == "Connected":
-            if tracker_loaded:
-                self.run_generator()
             if "goal_condition" in args["slot_data"]: self.goal_condition = args["slot_data"]["goal_condition"]
             self.goal_characters = args["slot_data"]["goal_characters"]
-            self.starting_captain = args["slot_data"]["starting_captain"]
             if "randomize_shops" in args["slot_data"]: self.randomize_shops = args["slot_data"]["randomize_shops"]
-            if "music" in args["slot_data"]: self.music = args["slot_data"]["music"]
             self.reduced_cutscenes = args["slot_data"]["reduced_cutscenes"]
             self.world_version = Utils.tuplize_version(args["slot_data"]["world_version"])
             if self.world_version > WORLD_VERSION:
-                logger.error("This multiworld was generated on a newer APWorld version. Please update your APWorld "
-                             "installation.")
+                logger.error("This multiworld was generated on a newer APWorld version ({self.world_version} vs "
+                             "{WORLD_VERSION}). Please update your APWorld installation before connecting.")
+                self.disconnect()
+                return
+            elif self.world_version < WORLD_BACKCOMPAT_MIN_VERSION:
+                logger.error("This multiworld was generated on an older APWorld version ({self.world_version} vs "
+                             "{WORLD_VERSION}). Please downgrade to a compatible version before connecting.")
                 self.disconnect()
                 return
             elif self.world_version < WORLD_VERSION:
-                logger.warning("This multiworld was generated on an older APWorld version. Please let the host know "
-                               "to update their APWorld installation.")
+                logger.warning("This multiworld was generated on an older APWorld version ({self.world_version} vs "
+                               "{WORLD_VERSION}). Please let the host know to update their APWorld installation.")
             if dolphin_memory_engine.is_hooked() and self.dolphin_status == CONNECTION_CONNECTED_STATUS:
                 if check_ingame():
                     init_game(self)
@@ -757,36 +656,18 @@ def check_ingame() -> bool:
 
 def init_game(ctx: MarioSuperSluggersContext):
     ctx.locations_checked = set()
-    # Match new Wario City logic only for versions >= 0.3.0
-    if ctx.world_version >= Utils.tuplize_version("0.3.0"):
-        dolphin_memory_engine.write_byte(0x802153EE, 0xF8)
-    for addr in REQ_CHARS:
-        dolphin_memory_engine.write_byte(addr, ctx.goal_characters)
-    for addr in MOVED_FLAGS:
-        dolphin_memory_engine.write_byte(addr, dolphin_memory_engine.read_byte(addr) | 0xF8)
     for addr in ZERO_SHORTS:
         write_short(addr, 0)
-    for addr in NOPS:
-        dolphin_memory_engine.write_word(addr, 0x60000000)
-    for addr in BRANCH:
-        write_short(addr, 0x4800)
     for addr in CUSTOM_BYTES:
         dolphin_memory_engine.write_byte(addr, CUSTOM_BYTES[addr])
-    for addr in CUSTOM_WORDS:
-        dolphin_memory_engine.write_word(addr, CUSTOM_WORDS[addr])
     if ctx.randomize_shops == 2:
         for addr in SHOP_WORDS:
             dolphin_memory_engine.write_word(addr, SHOP_WORDS[addr])
-    for track in ctx.music:
-        for addr in MUSIC[int(track)]:
-            dolphin_memory_engine.write_byte(addr, ctx.music[track])
     if ctx.reduced_cutscenes:
         for i in CUTSCENES:
             addr = i >> 8
             value = i % 0x100
             dolphin_memory_engine.write_byte(addr, dolphin_memory_engine.read_byte(addr) | value)
-    dolphin_memory_engine.write_byte(CURR_CAPTAIN, ctx.starting_captain)
-    write_short(TEAM_BASE, ctx.starting_captain)
     dolphin_memory_engine.write_byte(AUTO_NIGHT, 0)
 
 
@@ -828,7 +709,8 @@ async def dolphin_sync_task(ctx: MarioSuperSluggersContext) -> None:
                 logger.info("Attempting to connect to Dolphin...")
                 dolphin_memory_engine.hook()
                 if dolphin_memory_engine.is_hooked():
-                    if dolphin_memory_engine.read_bytes(0x80000000, 6) != b"RMBE01":
+                    if dolphin_memory_engine.read_bytes(0x80000000, 6) != b"RMBE01" or\
+                        dolphin_memory_engine.read_bytes(0x80000010, 2) != b"AP":
                         logger.info(CONNECTION_REFUSED_GAME_STATUS)
                         ctx.dolphin_status = CONNECTION_REFUSED_GAME_STATUS
                         dolphin_memory_engine.un_hook()

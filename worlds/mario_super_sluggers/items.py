@@ -132,8 +132,11 @@ ITEM_DATA = {
     "Star for Baby Daisy":    MarioSuperSluggersItemData(0x80E55BA702, ItemClassification.progression_skip_balancing),
     "Star for Baby DK":       MarioSuperSluggersItemData(0x80E55BA802, ItemClassification.progression_skip_balancing),
     "Day-night cycle":        MarioSuperSluggersItemData(0x80E55AE001, ItemClassification.progression),
+    "Shell":                  MarioSuperSluggersItemData(0x80E55AE201, ItemClassification.filler),
     "Fireball":               MarioSuperSluggersItemData(0x80E55AE301, ItemClassification.filler),
+    "Bob-omb":                MarioSuperSluggersItemData(0x80E55AE401, ItemClassification.filler),
     "POW-Ball":               MarioSuperSluggersItemData(0x80E55AE501, ItemClassification.filler),
+    "Banana":                 MarioSuperSluggersItemData(0x80E55AE601, ItemClassification.filler),
     "Mini Boo":               MarioSuperSluggersItemData(0x80E55AE701, ItemClassification.progression_skip_balancing),
     "Luigi's Flashlight":     MarioSuperSluggersItemData(0x80E55BF201, ItemClassification.progression),
     "Cruiser Pass":           MarioSuperSluggersItemData(0x80E55BF301, ItemClassification.progression),
@@ -345,6 +348,17 @@ def create_items(world: MarioSuperSluggersWorld) -> None:
                 .place_locked_item(create_item(world, "Luigi's Flashlight"))
             world.get_location("Toadsworth's shop: Buy Cruiser Pass")\
                 .place_locked_item(create_item(world, "Cruiser Pass"))
+    start_error_items = [
+        "Shell", "Bob-omb", "Banana"
+    ]
+    error_items = [
+        "Shell", "Fireball", "Bob-omb", "POW-Ball", "Banana", "Mini Boo"
+    ]
+    if world.options.randomize_error_items:
+        start_error_items = world.random.sample(error_items, 3)
+    for item in start_error_items:
+        items_to_create.remove(item)
+        world.push_precollected(create_item(world, item))
     bowser_monsters = [
         "Bowser", "Bowser Jr.", "Hammer Bro", "Magikoopa", "Red Magikoopa", "Green Magikoopa", "Yellow Magikoopa",
         "Dry Bones", "Green Dry Bones", "Dark Bones", "Blue Dry Bones", "Fire Bro", "Boomerang Bro",

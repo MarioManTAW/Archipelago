@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from Options import Range, PerGameCommonOptions, StartInventoryPool, Choice, Toggle
+from Options import Range, PerGameCommonOptions, StartInventoryPool, Choice, Toggle, OptionSet
 
 
 class GoalCondition(Choice):
@@ -54,9 +54,39 @@ class RandomizeStars(Toggle):
     display_name = "Randomize Stars"
 
 
+class RandomizeErrorItems(Toggle):
+    """Start the game with 3 random error items rather than the vanilla Shell, Banana, and Bob-omb."""
+    display_name = "Randomize Error Items"
+
+
+class RandomizeStats(Toggle):
+    """Shuffles stats between different characters. Pitching, batting, fielding, and running stats are shuffled
+    independently."""
+    display_name = "Randomize Stats"
+
+
+class RandomizePuzzles(Toggle):
+    """Randomizes the level puzzle in Mario Stadium and the hedge maze in Peach Ice Garden."""
+    display_name = "Randomize Puzzles"
+
+
+class RandomizeQuiz(OptionSet):
+    """Choose which question set(s) to use for Blue Yoshi's quiz.
+    Valid options are vanilla, sluggers, math, and meme."""
+    display_name = "Randomize Quiz"
+    valid_keys_casefold = True
+    valid_keys = ["vanilla", "sluggers", "math", "meme"]
+    default = ["vanilla"]
+
+
 class RandomizeMusic(Toggle):
     """Shuffles music between different stadiums, overworld locations, and menus."""
     display_name = "Randomize Music"
+
+
+class RandomizeText(Toggle):
+    """Shuffles dialogue throughout the game. Relevant UI/tutorial dialogue is excluded."""
+    display_name = "Randomize Text"
 
 
 class ReducedCutscenes(Toggle):
@@ -71,6 +101,11 @@ class MarioSuperSluggersOptions(PerGameCommonOptions):
     starting_captain: StartingCaptain
     randomize_shops: RandomizeShops
     randomize_stars: RandomizeStars
+    randomize_error_items: RandomizeErrorItems
+    randomize_stats: RandomizeStats
+    randomize_puzzles: RandomizePuzzles
+    randomize_quiz: RandomizeQuiz
     randomize_music: RandomizeMusic
+    randomize_text: RandomizeText
     reduced_cutscenes: ReducedCutscenes
     start_inventory_from_pool: StartInventoryPool

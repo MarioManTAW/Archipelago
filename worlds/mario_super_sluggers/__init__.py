@@ -79,7 +79,6 @@ class MarioSuperSluggersWorld(World):
         re_gen_passthrough = getattr(self.multiworld, "re_gen_passthrough", {})
         if re_gen_passthrough and self.game in re_gen_passthrough:
             slot_data = re_gen_passthrough[self.game]
-            self.options.starting_captain.value = [0, 4, 6, 2, 10].index(slot_data["starting_captain"])
             self.options.goal_condition.value = slot_data["goal_condition"]
             self.options.goal_characters.value = slot_data["goal_characters"]
             self.options.randomize_stars.value = slot_data["randomize_stars"]
@@ -142,8 +141,13 @@ class MarioSuperSluggersWorld(World):
             0x80E5551801,
             0x80E5551901,
         ]
-        patch.data = json.dumps({
+        patch_data = {
             "goal_characters": self.options.goal_characters.value,
+            "starting_captain": [0, 4, 6, 2, 10][self.options.starting_captain.value],
+            "randomize_shops": self.options.randomize_shops.value,
+            "randomize_puzzles": self.options.randomize_puzzles.value,
+            "randomize_quiz": list(self.options.randomize_quiz.value),
+            "randomize_text": self.options.randomize_text.value,
             "locations": [
                 {
                     "id": location.address,
@@ -153,17 +157,26 @@ class MarioSuperSluggersWorld(World):
                 }
                 for location in self.multiworld.get_locations(self.player)
                 if location.address in patchable_locations and location.item
-            ]
-        })
-        out_file_name = self.multiworld.get_out_file_name_base(self.player)
-        patch.write(os.path.join(output_directory, f"{out_file_name}{patch.patch_file_ending}"))
-
-    def fill_slot_data(self) -> dict[str, Any]:
-        starting_captains = [0, 4, 6, 2, 10]
-        starting_captain = starting_captains[self.options.starting_captain]
-        slot_data = self.options.as_dict("goal_condition", "goal_characters", "randomize_stars", "randomize_shops",
-                                         "reduced_cutscenes")
-        slot_data["starting_captain"] = starting_captain
+            ],
+            "stats": [],
+            "music": [],
+        }
+        if self.options.randomize_stats:
+            pitch = [i for i in range(71)]
+            bat = [i for i in range(71)]
+            field = [i for i in range(71)]
+            run = [i for i in range(71)]
+            self.random.shuffle(pitch)
+            self.random.shuffle(bat)
+            self.random.shuffle(field)
+            self.random.shuffle(run)
+            for i in range(71):
+                patch_data["stats"].append({
+                    "pitch": pitch[i],
+                    "bat": bat[i],
+                    "field": field[i],
+                    "run": run[i]
+                })
         if self.options.randomize_music:
             music = [
                 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18,
@@ -171,7 +184,14 @@ class MarioSuperSluggersWorld(World):
             ]
             music_keys = [k for k in music]
             self.random.shuffle(music)
-            slot_data["music"] = dict(zip(music_keys, music))
+            patch_data["music"] = dict(zip(music_keys, music))
+        patch.data = json.dumps(patch_data)
+        out_file_name = self.multiworld.get_out_file_name_base(self.player)
+        patch.write(os.path.join(output_directory, f"{out_file_name}{patch.patch_file_ending}"))
+
+    def fill_slot_data(self) -> dict[str, Any]:
+        slot_data = self.options.as_dict("goal_condition", "goal_characters", "randomize_stars", "randomize_shops",
+                                         "reduced_cutscenes")
         slot_data["world_version"] = self.world_version.as_simple_string()
         return slot_data
 
