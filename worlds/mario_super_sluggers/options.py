@@ -66,7 +66,7 @@ class RandomizeStats(Toggle):
 
 
 class RandomizePuzzles(Toggle):
-    """Randomizes the level puzzle in Mario Stadium and the hedge maze in Peach Ice Garden."""
+    """Randomizes the lever puzzle in Mario Stadium and the hedge maze in Peach Ice Garden."""
     display_name = "Randomize Puzzles"
 
 
