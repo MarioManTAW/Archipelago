@@ -78,9 +78,9 @@ class PaintWorld(World):
         self.push_precollected(self.create_item(starting_tools.pop(self.options.starting_tool)))
         items_to_create = ["Free-Form Select", "Select", "Fill With Color", "Pick Color", "Text", "Curve", "Polygon"]
         items_to_create += starting_tools
-        items_to_create += ["Progressive Canvas Width"] * ceil(self.final_width /\
+        items_to_create += ["Progressive Canvas Width"] * ceil(self.final_width /
                                                                (self.options.canvas_width_increment * 2))
-        items_to_create += ["Progressive Canvas Height"] * ceil(self.final_height /\
+        items_to_create += ["Progressive Canvas Height"] * ceil(self.final_height /
                                                                 (self.options.canvas_height_increment * 2))
         depth_items = ["Progressive Color Depth (Red)", "Progressive Color Depth (Green)",
                        "Progressive Color Depth (Blue)"]
