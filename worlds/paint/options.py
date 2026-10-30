@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from Options import OptionSet, Range, PerGameCommonOptions, StartInventoryPool, Toggle, Choice, Visibility
+from Options import OptionSet, Range, PerGameCommonOptions, Removed, StartInventoryPool, Toggle, Choice, Visibility
 
 
 class LogicPercent(Range):
@@ -41,17 +41,10 @@ class QuarterPercentChecks(Range):
     default = 70
 
 
-class CanvasSizeIncrement(Choice):
+class CanvasSizeIncrement(Removed):
     """Sets the number of pixels the canvas will expand for each width/height item received.
     Ensure an adequate number of locations are generated if setting this below 50."""
     display_name = "Canvas Size Increment"
-    # option_10 = 10
-    # option_20 = 20
-    option_25 = 25
-    option_50 = 50
-    option_100 = 100
-    default = 100
-    visibility = Visibility.none
 
 
 class CanvasWidthIncrement(Choice):
